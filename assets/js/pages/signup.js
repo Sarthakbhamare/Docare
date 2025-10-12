@@ -275,7 +275,9 @@ export const SignupPage = {
                 showToast(`${i18n.t('auth.signupSuccess')} ${user.name}!`, { variant: 'success', duration: 3600 });
                 window.__appRouter?.navigate('/dashboard');
             }).catch(error => {
-                showToast(error.message || i18n.t('auth.signupFailed'), { variant: 'error' });
+                console.error('[Signup] Error:', error);
+                const errorMessage = error?.message || error?.toString() || i18n.t('auth.signupFailed');
+                showToast(errorMessage, { variant: 'error' });
             }).finally(() => {
                 submitButton.disabled = false;
                 submitButton.textContent = i18n.t('actions.signup');

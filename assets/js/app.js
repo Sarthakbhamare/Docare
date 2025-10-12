@@ -367,7 +367,7 @@ class Router {
         console.log('[Router] Normalized path:', path);
         console.log('[Router] Available routes:', Object.keys(routes));
         const { page, redirect } = this.resolve(path);
-        console.log('[Router] Resolved page:', page === NotFoundPage ? 'NotFoundPage' : page.constructor?.name || 'Unknown');
+        console.log('[Router] Resolved page:', page === NotFoundPage ? 'NotFoundPage' : (typeof page === 'object' ? 'PageObject' : 'Unknown'));
 
         if (redirect) {
             this.navigate(redirect, true);
