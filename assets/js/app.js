@@ -310,11 +310,8 @@ const focusMain = () => {
 class Router {
     constructor(root) {
         this.root = root;
-        if (isFileProtocol) {
-            window.addEventListener('hashchange', () => this.renderCurrentRoute(false));
-        } else {
-            window.addEventListener('popstate', () => this.renderCurrentRoute(false));
-        }
+        // Always use hashchange for GitHub Pages compatibility
+        window.addEventListener('hashchange', () => this.renderCurrentRoute(false));
         auth.onAuthChange(() => this.renderCurrentRoute(true));
         i18n.onChange(() => this.renderCurrentRoute(true));
         this.renderCurrentRoute(true);
@@ -347,29 +344,19 @@ class Router {
             return;
         }
 
-        if (isFileProtocol) {
-            const newHash = normalized === '/' ? '' : `#${normalized}`;
-            if (replace) {
-                history.replaceState({}, '', `${window.location.pathname}${newHash}`);
-            } else {
-                window.location.hash = newHash;
-            }
-            this.renderCurrentRoute(true);
-            return;
-        }
-
+        // Always use hash routing for GitHub Pages compatibility
+        const newHash = normalized === '/' ? '' : `#${normalized}`;
         if (replace) {
-            history.replaceState({}, '', normalized);
-        } else if (normalized !== normalizePath(window.location.pathname)) {
-            history.pushState({}, '', normalized);
+            history.replaceState({}, '', `${window.location.pathname}${newHash}`);
+        } else {
+            window.location.hash = newHash;
         }
         this.renderCurrentRoute(true);
     }
 
     renderCurrentRoute(scrollToTop) {
-        const rawPath = isFileProtocol
-            ? (window.location.hash?.slice(1) || '/')
-            : (window.location.pathname || '/');
+        // Always use hash routing for GitHub Pages compatibility
+        const rawPath = window.location.hash?.slice(1) || '/';
         const path = normalizePath(rawPath);
         const { page, redirect } = this.resolve(path);
 
