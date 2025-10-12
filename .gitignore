@@ -50,6 +50,3 @@ Desktop.ini
 *.temp
 *.bak
 *.backup
-
-# Old image folder (can be removed after verifying assets/img works)
-img/
