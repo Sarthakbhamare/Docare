@@ -1,0 +1,112 @@
+.messages-page {
+    display: grid;
+    gap: var(--space-5);
+}
+
+.messages-page__layout {
+    display: grid;
+    grid-template-columns: minmax(240px, 320px) 1fr;
+    gap: var(--space-4);
+}
+
+.provider-list {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    gap: var(--space-3);
+}
+
+.provider-card {
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.provider-card--active,
+.provider-card:hover,
+.provider-card:focus-within {
+    border-color: rgba(46, 125, 255, 0.5);
+    background-color: rgba(46, 125, 255, 0.08);
+}
+
+.provider-card__meta {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-secondary);
+}
+
+.chat-panel {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--space-3);
+    min-height: 480px;
+}
+
+.chat-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.chat-log {
+    overflow-y: auto;
+    display: grid;
+    gap: var(--space-3);
+    padding-right: var(--space-2);
+}
+
+.chat-message {
+    max-width: 70%;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background-color: rgba(46, 125, 255, 0.12);
+}
+
+.chat-message--outgoing {
+    margin-left: auto;
+    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-secondary));
+    color: var(--color-surface);
+}
+
+.chat-compose {
+    display: grid;
+    gap: var(--space-2);
+}
+
+.chat-compose textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.chat-actions {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.chat-actions button {
+    flex: 1;
+}
+
+@media (max-width: 900px) {
+    .messages-page__layout {
+        grid-template-columns: 1fr;
+    }
+
+    .chat-message {
+        max-width: 100%;
+    }
+
+    .chat-actions button {
+        flex: 1 1 100%;
+    }
+}
