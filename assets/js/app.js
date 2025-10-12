@@ -1,3 +1,8 @@
+// Ensure hash routing is initialized for GitHub Pages
+if (!window.location.hash || window.location.hash === '#' || window.location.hash === '') {
+    window.location.replace(window.location.pathname + window.location.search + '#/');
+}
+
 import { auth } from './auth.js';
 import { i18n } from './i18n.js';
 import { showToast } from './toast.js';
@@ -357,8 +362,12 @@ class Router {
     renderCurrentRoute(scrollToTop) {
         // Always use hash routing for GitHub Pages compatibility
         const rawPath = window.location.hash?.slice(1) || '/';
+        console.log('[Router] Raw path from hash:', rawPath);
         const path = normalizePath(rawPath);
+        console.log('[Router] Normalized path:', path);
+        console.log('[Router] Available routes:', Object.keys(routes));
         const { page, redirect } = this.resolve(path);
+        console.log('[Router] Resolved page:', page === NotFoundPage ? 'NotFoundPage' : page.constructor?.name || 'Unknown');
 
         if (redirect) {
             this.navigate(redirect, true);
