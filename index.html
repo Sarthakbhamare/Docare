@@ -26,6 +26,12 @@
     <link rel="stylesheet" href="assets/css/pages/video-call.css">
     <link rel="stylesheet" href="assets/css/pages/profile.css">
     <link rel="stylesheet" href="assets/css/pages/library.css">
+    <script>
+        // Ensure hash routing works on GitHub Pages
+        if (!window.location.hash || window.location.hash === '#') {
+            window.location.hash = '#/';
+        }
+    </script>
 </head>
 <body>
     <div id="app" class="app-root" data-app-root></div>
