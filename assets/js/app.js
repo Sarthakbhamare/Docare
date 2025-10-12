@@ -97,7 +97,7 @@ const renderPublicHeader = () => `
     <header class="app-header app-header--public">
         <div class="container app-header__inner">
             <a class="app-brand" data-route="/" href="/" aria-label="${i18n.t('brand.name')}">
-                <img src="img/logo.jpg" alt="DoCare logo">
+                <img src="./img/logo.jpg" alt="DoCare logo">
                 <span>${i18n.t('brand.name')}</span>
             </a>
             <nav class="app-header__nav" aria-label="Public navigation">
@@ -117,7 +117,7 @@ const renderPrivateHeader = user => `
     <header class="app-header app-header--private">
         <div class="container app-header__inner">
             <a class="app-brand" data-route="/dashboard" href="/dashboard" aria-label="${i18n.t('brand.name')}">
-                <img src="img/logo.jpg" alt="DoCare logo">
+                <img src="./img/logo.jpg" alt="DoCare logo">
                 <span>${i18n.t('brand.name')}</span>
             </a>
             <div class="app-header__utilities">
@@ -147,7 +147,7 @@ const renderFooter = () => `
         <div class="container app-footer__inner">
             <div class="app-footer__brand">
                 <a class="app-brand" data-route="/" href="/">
-                    <img src="img/logo.jpg" alt="DoCare logo">
+                    <img src="./img/logo.jpg" alt="DoCare logo">
                     <span>${i18n.t('brand.name')}</span>
                 </a>
                 <p>${i18n.t('brand.tagline')}</p>

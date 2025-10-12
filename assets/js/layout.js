@@ -36,7 +36,7 @@ const renderHeader = () => {
     headerHost.innerHTML = `
         <div class="container app-header__inner">
             <a class="app-brand" data-route="/home" href="/home" aria-label="DoCare home">
-                <img src="img/logo.jpg" alt="DoCare logo">
+                <img src="./img/logo.jpg" alt="DoCare logo">
                 <span>DoCare Health</span>
             </a>
             <nav class="nav-list" aria-label="Primary">
@@ -74,7 +74,7 @@ const renderFooter = () => {
         <div class="container app-footer__inner">
             <div class="app-footer__brand">
                 <a class="app-brand" data-route="/home" href="/home">
-                    <img src="img/logo.jpg" alt="DoCare logo">
+                    <img src="./img/logo.jpg" alt="DoCare logo">
                     <span>DoCare Health</span>
                 </a>
                 <p>Transforming compassionate care into everyday support for individuals and families.</p>
