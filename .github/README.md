@@ -2,4 +2,4 @@
 
 Healthcare Management with AI-Powered Symptom Checker
 
-[View Live Demo](https://YOUR-USERNAME.github.io/DoCare/)
+[View Live Demo]([(https://sarthakbhamare.github.io/Docare/)])
