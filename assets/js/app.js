@@ -6,6 +6,7 @@ if (!window.location.hash || window.location.hash === '#' || window.location.has
 import { auth } from './auth.js';
 import { i18n } from './i18n.js';
 import { showToast } from './toast.js';
+import { initFloatingChatButton } from './components/chatbot-modal.js';
 
 import { LandingPage } from './pages/home.js';
 import { LoginPage } from './pages/login.js';
@@ -430,3 +431,6 @@ class Router {
 // Initialize router - it will handle initial route and navigation
 const router = new Router(appRoot);
 window.__appRouter = router;
+
+// Initialize AI Chatbot (available on all pages after login)
+initFloatingChatButton();
