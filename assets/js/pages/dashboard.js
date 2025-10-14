@@ -18,12 +18,13 @@ const savedContent = [
 ];
 
 const quickActions = [
-    { route: '/appointments', labelKey: 'nav.appointments' },
-    { route: '/symptom-checker', labelKey: 'actions.symptomCheck' },
-    { route: '/messages', labelKey: 'actions.messageProvider' },
-    { route: '/medications', labelKey: 'actions.viewMedications' },
-    { route: '/billing', labelKey: 'nav.billing' },
-    { route: '/devices', labelKey: 'nav.devices' },
+    { type: 'route', route: '/appointments', labelKey: 'nav.appointments' },
+    { type: 'route', route: '/symptom-checker', labelKey: 'actions.symptomCheck' },
+    { type: 'route', route: '/messages', labelKey: 'actions.messageProvider' },
+    { type: 'route', route: '/medications', labelKey: 'actions.viewMedications' },
+    { type: 'route', route: '/billing', labelKey: 'nav.billing' },
+    { type: 'route', route: '/devices', labelKey: 'nav.devices' },
+    { type: 'upload', labelKey: 'dashboard.uploadDocuments', category: 'lab-results' },
 ];
 
 const connectedDevices = [
@@ -132,9 +133,20 @@ export const DashboardPage = {
                     <article class="dashboard-card quick-actions">
                         <h2 class="section__headline">${i18n.t('dashboard.quickActions')}</h2>
                         <div class="quick-actions__buttons">
-                            ${quickActions.map(action => `
-                                <button class="button-primary" type="button" data-route="${action.route}">${i18n.t(action.labelKey)}</button>
-                            `).join('')}
+                            ${quickActions.map(action => {
+                                if (action.type === 'upload') {
+                                    return `
+                                        <button class="button-primary" type="button" data-upload-documents data-upload-category="${action.category}">
+                                            ${i18n.t(action.labelKey)}
+                                        </button>
+                                    `;
+                                }
+                                return `
+                                    <button class="button-primary" type="button" data-route="${action.route}">
+                                        ${i18n.t(action.labelKey)}
+                                    </button>
+                                `;
+                            }).join('')}
                         </div>
                     </article>
                     

@@ -2,6 +2,8 @@ import { i18n } from '../i18n.js';
 import { auth } from '../auth.js';
 import { showToast } from '../toast.js';
 import { showEmergencySOSModal } from '../emergency.js';
+import { DocumentsAPI } from '../api.js';
+import { FileValidation } from '../utils/file-validator.js';
 
 const PROFILE_THEME_KEY = 'docare.theme';
 
@@ -19,6 +21,40 @@ const consentDataPoints = [
     { id: 'medicationAdherence', label: 'Medication adherence' },
     { id: 'sleepPatterns', label: 'Sleep patterns & duration' },
 ];
+
+let profileDocumentListener = null;
+
+const renderDocumentVaultSummary = (container, documents = []) => {
+    if (!container) return;
+    if (!documents.length) {
+        container.innerHTML = `<li class="document-vault__empty">${i18n.t('profile.documentsEmpty')}</li>`;
+        return;
+    }
+
+    const sorted = [...documents].sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+    const latest = sorted[0];
+    const totalSize = documents.reduce((sum, doc) => sum + (doc.size || 0), 0);
+    const categories = Array.from(new Set(documents.map((doc) => doc.category).filter(Boolean)));
+
+    const humanizeCategory = (id) => {
+        if (!id) return '';
+        return id
+            .split('-')
+            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ');
+    };
+
+    const categoryLabel = categories.length
+        ? categories.map((id) => humanizeCategory(id)).join(', ')
+        : '—';
+
+    container.innerHTML = `
+        <li><strong>${i18n.t('profile.documentsTotal')}:</strong> ${documents.length}</li>
+        <li><strong>${i18n.t('profile.documentsLatest')}:</strong> ${latest?.originalName || latest?.storedName || '—'} · ${latest?.uploadedAt ? new Date(latest.uploadedAt).toLocaleString() : '—'}</li>
+        <li><strong>${i18n.t('profile.documentsCategories')}:</strong> ${categoryLabel}</li>
+        ${totalSize ? `<li><strong>${i18n.t('profile.documentsStorage')}:</strong> ${FileValidation.readableFileSize(totalSize)}</li>` : ''}
+    `;
+};
 
 export const ProfilePage = {
     isPublic: false,
@@ -117,6 +153,18 @@ export const ProfilePage = {
                             `).join('')}
                         </div>
                         <button class="button-primary" type="button" data-route="/dashboard">${i18n.t('profile.addDevice')}</button>
+                    </article>
+
+                    <article class="form-card">
+                        <h2>${i18n.t('profile.documentsSection')}</h2>
+                        <p class="helper-text">${i18n.t('profile.documentsSubtitle')}</p>
+                        <div class="document-vault-actions">
+                            <button class="button-primary" type="button" data-upload-documents data-upload-category="lab-results">${i18n.t('profile.documentsUpload')}</button>
+                            <button class="button-secondary" type="button" data-view-documents>${i18n.t('profile.documentsViewAll')}</button>
+                        </div>
+                        <ul class="document-vault__meta" data-document-vault-meta>
+                            <li class="document-vault__empty">${i18n.t('profile.documentsEmpty')}</li>
+                        </ul>
                     </article>
 
                     <article class="form-card">
@@ -232,6 +280,36 @@ export const ProfilePage = {
                 showToast(i18n.t('profile.consentSaved'), { variant: 'success', duration: 2200 });
             });
         });
+
+        const viewDocumentsButton = document.querySelector('[data-view-documents]');
+        viewDocumentsButton?.addEventListener('click', () => {
+            showToast('Document history view is coming soon.', { variant: 'info', duration: 2200 });
+        });
+
+        const loadDocumentSummary = () => {
+            const container = document.querySelector('[data-document-vault-meta]');
+            if (!container) return;
+            container.innerHTML = `<li>Loading...</li>`;
+            DocumentsAPI.listDocuments()
+                .then((response) => {
+                    if (!response.success) {
+                        container.innerHTML = `<li class="document-vault__empty">${response.error || 'Unable to load documents.'}</li>`;
+                        return;
+                    }
+                    const documents = response.data?.documents || [];
+                    renderDocumentVaultSummary(container, documents);
+                })
+                .catch(() => {
+                    container.innerHTML = `<li class="document-vault__empty">Unable to load documents.</li>`;
+                });
+        };
+
+        if (profileDocumentListener) {
+            document.removeEventListener('documents:updated', profileDocumentListener);
+        }
+        profileDocumentListener = loadDocumentSummary;
+        document.addEventListener('documents:updated', profileDocumentListener);
+        loadDocumentSummary();
 
         const mfaToggle = document.querySelector('[data-toggle-mfa]');
         mfaToggle?.addEventListener('click', () => {

@@ -7,6 +7,7 @@ import { auth } from './auth.js';
 import { i18n } from './i18n.js';
 import { showToast } from './toast.js';
 import { initFloatingChatButton } from './components/chatbot-modal.js';
+import { initFileUploadTriggers } from './components/file-upload-modal.js';
 
 import { LandingPage } from './pages/home.js';
 import { LoginPage } from './pages/login.js';
@@ -425,6 +426,7 @@ class Router {
         wireThemeToggle();
         wireLogout(this);
         page.afterRender?.();
+        initFileUploadTriggers();
     }
 }
 

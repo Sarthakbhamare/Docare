@@ -303,6 +303,58 @@ export const MessagesAPI = {
 };
 
 /**
+ * Documents APIs
+ */
+export const DocumentsAPI = {
+    async listDocuments() {
+        return apiCall('documents.list', async () => {
+            await new Promise(resolve => setTimeout(resolve, 350));
+            const stored = JSON.parse(localStorage.getItem('docare.documents') || '[]');
+            return { documents: stored };
+        });
+    },
+
+    async uploadDocument(documentPayload) {
+        return apiCall('documents.upload', async () => {
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            const stored = JSON.parse(localStorage.getItem('docare.documents') || '[]');
+            const record = {
+                id: crypto.randomUUID(),
+                category: documentPayload.category,
+                storedName: documentPayload.metadata?.storedName,
+                originalName: documentPayload.metadata?.originalName,
+                mimeType: documentPayload.metadata?.mimeType,
+                size: documentPayload.metadata?.size,
+                checksum: documentPayload.metadata?.checksum,
+                uploadedAt: new Date().toISOString(),
+                encryption: {
+                    algorithm: documentPayload.encryption?.algorithm,
+                    iv: documentPayload.encryption?.iv,
+                    key: documentPayload.encryption?.key,
+                },
+                storageReference: documentPayload.storageReference || crypto.randomUUID(),
+            };
+
+            stored.push(record);
+            localStorage.setItem('docare.documents', JSON.stringify(stored));
+
+            return { document: record };
+        });
+    },
+
+    async deleteDocument(documentId) {
+        return apiCall('documents.delete', async () => {
+            await new Promise(resolve => setTimeout(resolve, 400));
+            const stored = JSON.parse(localStorage.getItem('docare.documents') || '[]');
+            const filtered = stored.filter((doc) => doc.id !== documentId);
+            localStorage.setItem('docare.documents', JSON.stringify(filtered));
+            return { success: true };
+        });
+    },
+};
+
+/**
  * Utility: Get current location
  */
 export async function getCurrentLocation() {
@@ -340,5 +392,6 @@ export default {
     Billing: BillingAPI,
     Devices: DevicesAPI,
     Messages: MessagesAPI,
+    Documents: DocumentsAPI,
     getRequestState,
 };
