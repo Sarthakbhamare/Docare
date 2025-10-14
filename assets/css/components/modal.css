@@ -1,0 +1,805 @@
+/* ========================================
+   Modal Overlay & Container
+   ======================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-container--large {
+    max-width: 700px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   Modal Header
+   ======================================== */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #111827;
+}
+
+/* ========================================
+   Modal Body
+   ======================================== */
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f3f4f6;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* ========================================
+   Modal Footer
+   ======================================== */
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 20px 24px;
+    border-top: 1px solid #e5e7eb;
+    justify-content: flex-end;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* ========================================
+   Form Elements
+   ======================================== */
+.label {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.input,
+.select,
+.textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.form-grid--two-col {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.form-grid--three-col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 640px) {
+    .form-grid--two-col,
+    .form-grid--three-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   Character Counter
+   ======================================== */
+.character-counter {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.character-counter.warning {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+/* ========================================
+   Time Slot Grid (Appointments)
+   ======================================== */
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.time-slot {
+    padding: 12px 8px;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.time-slot:hover:not(:disabled) {
+    background: #f3f4f6;
+    border-color: #2563eb;
+}
+
+.time-slot.selected {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
+.time-slot:disabled {
+    background: #f3f4f6;
+    border-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* ========================================
+   Warning Box (Cancel Confirmation)
+   ======================================== */
+.warning-box {
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.warning-box-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 8px;
+}
+
+.warning-box-header svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.warning-box p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #78350f;
+}
+
+/* ========================================
+   Checkbox Labels
+   ======================================== */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* ========================================
+   Buttons
+   ======================================== */
+.button-primary,
+.button-secondary {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.button-primary {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.button-primary:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.button-primary:disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+}
+
+.button-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.button-secondary:hover {
+    background: #e5e7eb;
+}
+
+/* ========================================
+   Payment Modal Specific Styles
+   ======================================== */
+.payment-summary {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.amount-large {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.payment-methods-selector {
+    margin-bottom: 24px;
+}
+
+.payment-methods-selector h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.payment-method-tabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.payment-tab {
+    padding: 12px 16px;
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payment-tab:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.payment-tab.active {
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.card-input-wrapper {
+    position: relative;
+    margin-top: 6px;
+}
+
+.input-card {
+    padding-right: 80px;
+}
+
+.card-brand {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 600;
+    color: #2563eb;
+}
+
+.security-badges {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.badge {
+    font-size: 12px;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.info-box {
+    background: #eff6ff;
+    border: 1px solid #93c5fd;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.info-icon {
+    font-size: 18px;
+}
+
+.info-box p {
+    margin: 0;
+    font-size: 13px;
+    color: #1e40af;
+}
+
+/* ========================================
+   Success Modal
+   ======================================== */
+.success-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.transaction-details {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px 0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+/* ========================================
+   Device Connection Modal Styles
+   ======================================== */
+.device-selection {
+    padding: 10px 0;
+}
+
+.device-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.device-card {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.device-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+}
+
+.device-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.device-icon.large {
+    font-size: 72px;
+}
+
+.device-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: #111827;
+}
+
+.device-card p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0 0 16px 0;
+    min-height: 40px;
+}
+
+.device-card .button-primary {
+    width: 100%;
+}
+
+/* OAuth Flow */
+.oauth-flow {
+    padding: 10px 0;
+}
+
+.oauth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.oauth-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 12px 0 0 0;
+}
+
+.permissions-section {
+    margin-bottom: 24px;
+}
+
+.permissions-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #111827;
+}
+
+.permissions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.permission-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.permission-icon {
+    width: 24px;
+    height: 24px;
+    background: #10b981;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.permission-item strong {
+    display: block;
+    font-size: 14px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.permission-item p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.oauth-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.oauth-actions .button-primary {
+    flex: 1;
+}
+
+.oauth-footer {
+    font-size: 12px;
+    color: #6b7280;
+    text-align: center;
+    margin-top: 16px;
+}
+
+.oauth-footer a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.oauth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Device Status & Permissions Management */
+.device-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.status-indicator--connected {
+    background: #10b981;
+}
+
+.status-indicator--disconnected {
+    background: #ef4444;
+}
+
+.status-indicator::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0;
+    animation: pulse 2s infinite;
+}
+
+.status-indicator--connected::after {
+    color: #10b981;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.3); }
+}
+
+.sync-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.sync-info p {
+    margin: 0;
+    font-size: 14px;
+    color: #374151;
+}
+
+.permissions-toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.permission-toggle {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.permission-toggle:hover {
+    background: #f3f4f6;
+}
+
+.permission-toggle input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.permission-toggle strong {
+    display: block;
+    font-size: 14px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.permission-toggle p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.danger-zone {
+    border: 2px solid #fecaca;
+    border-radius: 8px;
+    padding: 20px;
+    background: #fef2f2;
+    margin-top: 24px;
+}
+
+.danger-zone h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #dc2626;
+    margin: 0 0 12px 0;
+}
+
+.button-danger {
+    background: #dc2626;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.button-danger:hover {
+    background: #b91c1c;
+}
+
+.help-text {
+    font-size: 12px;
+    color: #6b7280;
+    margin: 8px 0 0 0;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 640px) {
+    .modal-container {
+        max-width: 100%;
+        border-radius: 12px 12px 0 0;
+        max-height: 95vh;
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 16px;
+    }
+
+    .time-slots-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 8px;
+    }
+
+    .payment-method-tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .devices-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .oauth-actions {
+        flex-direction: column;
+    }
+
+    .sync-info {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+}

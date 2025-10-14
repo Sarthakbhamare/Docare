@@ -1,0 +1,266 @@
+/* ========================================
+   Form Validation Styles
+   ======================================== */
+
+.validation-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.validation-wrapper .input,
+.validation-wrapper .select,
+.validation-wrapper .textarea {
+    margin-bottom: 0;
+    padding-right: 40px; /* Space for icon */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Valid State */
+.validation-wrapper.is-valid .input,
+.validation-wrapper.is-valid .select,
+.validation-wrapper.is-valid .textarea {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+.validation-wrapper.is-valid .input:focus,
+.validation-wrapper.is-valid .select:focus,
+.validation-wrapper.is-valid .textarea:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Invalid State */
+.validation-wrapper.is-invalid .input,
+.validation-wrapper.is-invalid .select,
+.validation-wrapper.is-invalid .textarea {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.validation-wrapper.is-invalid .input:focus,
+.validation-wrapper.is-invalid .select:focus,
+.validation-wrapper.is-invalid .textarea:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Validation Icon */
+.validation-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.validation-wrapper.is-valid .validation-icon {
+    color: #10b981;
+    opacity: 1;
+}
+
+.validation-wrapper.is-invalid .validation-icon {
+    color: #ef4444;
+    opacity: 1;
+}
+
+/* For textareas, position icon at top-right */
+.validation-wrapper .textarea ~ .validation-icon {
+    top: 16px;
+    transform: none;
+}
+
+/* Validation Feedback Message */
+.validation-feedback {
+    margin-top: 6px;
+    font-size: 13px;
+    min-height: 20px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.validation-wrapper.is-invalid .validation-feedback {
+    color: #dc2626;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.validation-wrapper.is-valid .validation-feedback {
+    color: #059669;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+    margin-top: 8px;
+}
+
+.password-strength-bar {
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.password-strength-fill {
+    height: 100%;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.password-strength-fill.weak {
+    width: 33%;
+    background: #ef4444;
+}
+
+.password-strength-fill.medium {
+    width: 66%;
+    background: #f59e0b;
+}
+
+.password-strength-fill.strong {
+    width: 100%;
+    background: #10b981;
+}
+
+.password-strength-text {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.password-strength-text.weak {
+    color: #dc2626;
+}
+
+.password-strength-text.medium {
+    color: #d97706;
+}
+
+.password-strength-text.strong {
+    color: #059669;
+}
+
+/* Password Requirements Checklist */
+.password-requirements {
+    margin-top: 12px;
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.password-requirements ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.password-requirements li {
+    padding: 4px 0;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.password-requirements li::before {
+    content: '○';
+    color: #d1d5db;
+}
+
+.password-requirements li.met {
+    color: #059669;
+}
+
+.password-requirements li.met::before {
+    content: '✓';
+    color: #10b981;
+    font-weight: bold;
+}
+
+/* Form Helper Text */
+.form-helper-text {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+/* Required Field Indicator */
+.label .required {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+/* Loading State */
+.validation-wrapper.is-validating .input,
+.validation-wrapper.is-validating .select,
+.validation-wrapper.is-validating .textarea {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='8' fill='none' stroke='%239ca3af' stroke-width='2' stroke-dasharray='50.265 50.265' stroke-linecap='round'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 10 10' to='360 10 10' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px 20px;
+}
+
+/* Inline Validation for Multi-field Groups */
+.form-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.form-row .validation-wrapper {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Animation for validation state changes */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+.validation-wrapper.is-invalid.shake {
+    animation: shake 0.3s ease-in-out;
+}
+
+/* Focus ring for accessibility */
+.validation-wrapper .input:focus-visible,
+.validation-wrapper .select:focus-visible,
+.validation-wrapper .textarea:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Dark mode support (if needed later) */
+@media (prefers-color-scheme: dark) {
+    .validation-wrapper.is-valid .input,
+    .validation-wrapper.is-valid .select,
+    .validation-wrapper.is-valid .textarea {
+        background-color: rgba(16, 185, 129, 0.1);
+    }
+
+    .validation-wrapper.is-invalid .input,
+    .validation-wrapper.is-invalid .select,
+    .validation-wrapper.is-invalid .textarea {
+        background-color: rgba(239, 68, 68, 0.1);
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .form-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .validation-wrapper .input,
+    .validation-wrapper .select,
+    .validation-wrapper .textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
