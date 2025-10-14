@@ -19,6 +19,7 @@ import { MedicationsPage } from './pages/medications.js';
 import { AppointmentsPage } from './pages/appointments.js';
 import { BillingPage } from './pages/billing.js';
 import { DevicesPage } from './pages/devices.js';
+import { HealthJournalPage } from './pages/health-journal.js';
 import { VideoCallPage } from './pages/video-call.js';
 import { ProfilePage } from './pages/profile.js';
 import { LibraryPage } from './pages/library.js';
@@ -66,6 +67,7 @@ const routes = {
     '/appointments': AppointmentsPage,
     '/billing': BillingPage,
     '/devices': DevicesPage,
+    '/health-journal': HealthJournalPage,
     '/video-call': VideoCallPage,
     '/profile': ProfilePage,
     '/library': LibraryPage,

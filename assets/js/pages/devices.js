@@ -1,6 +1,7 @@
 import { i18n } from '../i18n.js';
 import { showToast } from '../toast.js';
 import { auth } from '../auth.js';
+import { showDeviceConnectModal, showPermissionsModal } from '../components/device-modal.js';
 
 const deviceCatalog = [
     {
@@ -234,11 +235,19 @@ export const DevicesPage = {
         `;
     },
     afterRender() {
+        // Manage permissions button in sidebar
+        document.querySelector('[data-manage-permissions]')?.addEventListener('click', () => {
+            const connectedDevices = deviceCatalog.filter(d => d.status === 'connected');
+            if (connectedDevices.length > 0) {
+                showPermissionsModal(connectedDevices[0]);
+            }
+        });
+        
         document.querySelectorAll('[data-connect]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const deviceId = e.target.getAttribute('data-connect');
-                const device = deviceCatalog.find(d => d.id === deviceId);
-                showToast(`${i18n.t('devices.connectingTo')} ${device?.name}...`, { variant: 'info', duration: 3000 });
+                const deviceType = deviceId.replace('dev-', '');
+                showDeviceConnectModal(deviceType);
             });
         });
 

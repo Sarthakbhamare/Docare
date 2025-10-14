@@ -1,5 +1,6 @@
 import { i18n } from '../i18n.js';
 import { showToast } from '../toast.js';
+import { showPaymentModal, downloadReceipt, exportTransactionsCSV } from '../components/payment-modal.js';
 
 const outstandingBalance = 128.40;
 
@@ -189,21 +190,26 @@ export const BillingPage = {
     },
     afterRender() {
         document.querySelector('[data-pay-balance]')?.addEventListener('click', () => {
-            showToast(i18n.t('billing.paymentProcessing'), { variant: 'info', duration: 3000 });
+            showPaymentModal(outstandingBalance);
         });
 
         document.querySelectorAll('[data-view-receipt]').forEach(btn => {
             btn.addEventListener('click', () => {
-                showToast(i18n.t('billing.receiptDownload'), { variant: 'success', duration: 2500 });
+                const txnId = btn.dataset.viewReceipt;
+                const transaction = transactions.find(t => t.id === txnId);
+                
+                if (transaction) {
+                    downloadReceipt(transaction);
+                }
             });
         });
 
         document.querySelector('[data-export-csv]')?.addEventListener('click', () => {
-            showToast(i18n.t('billing.exportStarted'), { variant: 'success', duration: 2500 });
+            exportTransactionsCSV(transactions);
         });
 
         document.querySelector('[data-add-payment]')?.addEventListener('click', () => {
-            showToast(i18n.t('billing.addPaymentPrompt'), { variant: 'info', duration: 3000 });
+            showPaymentModal(0, null, 'add-method');
         });
     },
 };

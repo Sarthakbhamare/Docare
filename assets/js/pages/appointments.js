@@ -1,5 +1,6 @@
 import { i18n } from '../i18n.js';
 import { showToast } from '../toast.js';
+import { showAppointmentModal, showCancelAppointmentModal } from '../components/appointment-modal.js';
 
 const upcomingAppointments = [
     {
@@ -212,7 +213,7 @@ export const AppointmentsPage = {
     },
     afterRender() {
         document.querySelector('[data-action="schedule-new"]')?.addEventListener('click', () => {
-            showToast(i18n.t('appointments.scheduleNewToast'), { variant: 'info', duration: 3000 });
+            showAppointmentModal();
         });
 
         document.querySelectorAll('[data-join-video]').forEach(btn => {
@@ -226,19 +227,36 @@ export const AppointmentsPage = {
 
         document.querySelectorAll('[data-reschedule]').forEach(btn => {
             btn.addEventListener('click', () => {
-                showToast(i18n.t('appointments.reschedulePrompt'), { variant: 'info', duration: 3000 });
+                const appointmentId = btn.dataset.reschedule;
+                const appointmentCard = btn.closest('.appointment-card');
+                
+                // Extract appointment data from card
+                const appointment = upcomingAppointments.find(apt => apt.id === appointmentId);
+                if (appointment) {
+                    showAppointmentModal(appointment, 'reschedule');
+                }
             });
         });
 
         document.querySelectorAll('[data-cancel]').forEach(btn => {
             btn.addEventListener('click', () => {
-                showToast(i18n.t('appointments.cancelConfirm'), { variant: 'warning', duration: 3500 });
+                const appointmentId = btn.dataset.cancel;
+                const appointment = upcomingAppointments.find(apt => apt.id === appointmentId);
+                
+                if (appointment) {
+                    showCancelAppointmentModal(appointment);
+                }
             });
         });
 
         document.querySelectorAll('[data-book-slot]').forEach(btn => {
             btn.addEventListener('click', () => {
-                showToast(i18n.t('appointments.slotSelected'), { variant: 'success', duration: 2500 });
+                const slotData = btn.dataset.bookSlot.split('-');
+                const slot = availableSlots.find(s => `${s.date}-${s.time}` === btn.dataset.bookSlot);
+                
+                if (slot) {
+                    showAppointmentModal({ date: slot.date, time: slot.time }, 'new');
+                }
             });
         });
     },
