@@ -28,9 +28,7 @@ export const authenticate = async (req, res, next) => {
         const decoded = verifyAccessToken(token);
 
         // Fetch user from database
-        const user = await User.findByPk(decoded.userId, {
-            attributes: { exclude: ['password_hash', 'mfa_secret'] },
-        });
+        const user = await User.findById(decoded.userId).select('-password_hash -mfa_secret');
 
         if (!user) {
             return res.status(401).json({
@@ -91,7 +89,7 @@ export const optionalAuth = async (req, res, next) => {
     try {
         const token = authHeader.substring(7);
         const decoded = verifyAccessToken(token);
-        const user = await User.findByPk(decoded.userId);
+        const user = await User.findById(decoded.userId);
         
         if (user && user.status === 'active') {
             req.user = user;

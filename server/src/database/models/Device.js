@@ -1,72 +1,85 @@
 /**
- * Device Integration Model
+ * Device Model
+ * Wearable device integration
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
+import { encrypt, decrypt } from '../../utils/encryption.js';
 
-export const Device = sequelize.define('Device', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const deviceSchema = new mongoose.Schema({
     user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
-        onDelete: 'CASCADE',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     device_type: {
-        type: DataTypes.ENUM('fitbit', 'apple-health', 'google-fit', 'withings', 'garmin', 'oura'),
-        allowNull: false,
+        type: String,
+        enum: ['fitbit', 'apple-watch', 'google-fit', 'samsung-health', 'other'],
+        required: true,
     },
     device_name: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
+        type: String,
+        required: true,
     },
-    status: {
-        type: DataTypes.ENUM('connected', 'disconnected', 'error'),
-        defaultValue: 'connected',
+    oauth_token_encrypted: {
+        type: String,
+        default: null,
     },
-    access_token_encrypted: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
-    refresh_token_encrypted: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+    oauth_refresh_token_encrypted: {
+        type: String,
+        default: null,
     },
     token_expires_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        type: Date,
+        default: null,
+    },
+    is_active: {
+        type: Boolean,
+        default: true,
     },
     last_sync_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        type: Date,
+        default: null,
     },
     sync_frequency_minutes: {
-        type: DataTypes.INTEGER,
-        defaultValue: 60,
+        type: Number,
+        default: 60,
+        min: 5,
     },
     permissions_granted: {
-        type: DataTypes.JSON,
-        allowNull: true,
-        comment: 'Array of granted permission scopes',
+        type: [String],
+        default: [],
     },
 }, {
-    tableName: 'devices',
-    indexes: [
-        {
-            fields: ['user_id'],
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            fields: ['status'],
-        },
-    ],
+    },
 });
 
+deviceSchema.index({ user_id: 1, is_active: 1 });
+
+deviceSchema.methods.getOAuthToken = function() {
+    return this.oauth_token_encrypted ? decrypt(this.oauth_token_encrypted) : null;
+};
+
+deviceSchema.methods.setOAuthToken = function(value) {
+    this.oauth_token_encrypted = value ? encrypt(value) : null;
+};
+
+deviceSchema.methods.getOAuthRefreshToken = function() {
+    return this.oauth_refresh_token_encrypted ? decrypt(this.oauth_refresh_token_encrypted) : null;
+};
+
+deviceSchema.methods.setOAuthRefreshToken = function(value) {
+    this.oauth_refresh_token_encrypted = value ? encrypt(value) : null;
+};
+
+export const Device = mongoose.model('Device', deviceSchema);
 export default Device;

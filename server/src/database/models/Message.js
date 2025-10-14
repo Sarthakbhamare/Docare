@@ -3,91 +3,80 @@
  * Patient-provider secure messaging
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
 import { encrypt, decrypt } from '../../utils/encryption.js';
 
-export const Message = sequelize.define('Message', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const messageSchema = new mongoose.Schema({
     thread_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        comment: 'Groups messages into conversations',
+        type: String,
+        required: true,
+        index: true,
     },
     sender_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     recipient_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     content_encrypted: {
-        type: DataTypes.TEXT,
-        allowNull: false,
+        type: String,
+        required: true,
     },
     status: {
-        type: DataTypes.ENUM('sent', 'delivered', 'read', 'archived'),
-        defaultValue: 'sent',
+        type: String,
+        enum: ['sent', 'delivered', 'read', 'archived'],
+        default: 'sent',
     },
     read_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        type: Date,
+        default: null,
     },
     is_system_message: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        type: Boolean,
+        default: false,
     },
     reply_to_message_id: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: 'messages',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message',
+        default: null,
     },
     attachments: {
-        type: DataTypes.JSON,
-        allowNull: true,
-        comment: 'Array of document IDs',
+        type: [String],
+        default: [],
+    },
+    priority: {
+        type: String,
+        enum: ['low', 'normal', 'high', 'urgent'],
+        default: 'normal',
     },
 }, {
-    tableName: 'messages',
-    indexes: [
-        {
-            fields: ['thread_id'],
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            fields: ['sender_id'],
-        },
-        {
-            fields: ['recipient_id'],
-        },
-        {
-            fields: ['status'],
-        },
-    ],
+    },
 });
 
-// Virtual fields for encryption/decryption
-Message.prototype.getContent = function() {
-    return this.content_encrypted ? decrypt(this.content_encrypted) : '';
+messageSchema.index({ thread_id: 1, createdAt: -1 });
+messageSchema.index({ sender_id: 1, recipient_id: 1 });
+
+messageSchema.methods.getContent = function() {
+    return this.content_encrypted ? decrypt(this.content_encrypted) : null;
 };
 
-Message.prototype.setContent = function(value) {
-    this.content_encrypted = encrypt(value);
+messageSchema.methods.setContent = function(value) {
+    this.content_encrypted = value ? encrypt(value) : null;
 };
 
+export const Message = mongoose.model('Message', messageSchema);
 export default Message;

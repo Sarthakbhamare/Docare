@@ -1,116 +1,103 @@
 /**
  * Document Model
- * Encrypted document storage metadata
+ * Encrypted document metadata and file storage
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
 
-export const Document = sequelize.define('Document', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const documentSchema = new mongoose.Schema({
     user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
-        onDelete: 'CASCADE',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     uploaded_by: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
-    category: {
-        type: DataTypes.ENUM('lab-results', 'insurance', 'prescriptions', 'medical-records', 'imaging', 'other'),
-        allowNull: false,
+    filename: {
+        type: String,
+        required: true,
     },
-    original_name: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+    original_filename: {
+        type: String,
+        required: true,
     },
-    stored_name: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true,
+    file_type: {
+        type: String,
+        required: true,
     },
-    mime_type: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-    },
-    size_bytes: {
-        type: DataTypes.BIGINT,
-        allowNull: false,
-    },
-    checksum_sha256: {
-        type: DataTypes.STRING(64),
-        allowNull: false,
+    file_size: {
+        type: Number,
+        required: true,
+        min: 0,
     },
     storage_location: {
-        type: DataTypes.STRING(500),
-        allowNull: false,
-        comment: 'S3 bucket path',
+        type: String,
+        required: true,
     },
     encryption_key_id: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        comment: 'AWS KMS key ID or local encryption key reference',
+        type: String,
+        required: true,
     },
     encryption_iv: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+        type: String,
+        required: true,
     },
-    status: {
-        type: DataTypes.ENUM('pending', 'uploaded', 'processing', 'available', 'archived', 'deleted'),
-        defaultValue: 'pending',
+    checksum: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: String,
+        enum: ['lab-result', 'prescription', 'imaging', 'insurance', 'consent-form', 'other'],
+        default: 'other',
+    },
+    description: {
+        type: String,
+        default: null,
     },
     virus_scan_status: {
-        type: DataTypes.ENUM('pending', 'clean', 'infected', 'failed'),
-        defaultValue: 'pending',
+        type: String,
+        enum: ['pending', 'clean', 'infected', 'error'],
+        default: 'pending',
     },
     virus_scan_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
-    },
-    expires_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
-        comment: 'Auto-delete date for temporary documents',
+        type: Date,
+        default: null,
     },
     access_count: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
+        type: Number,
+        default: 0,
     },
     last_accessed_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        type: Date,
+        default: null,
+    },
+    expires_at: {
+        type: Date,
+        default: null,
+    },
+    tags: {
+        type: [String],
+        default: [],
     },
 }, {
-    tableName: 'documents',
-    indexes: [
-        {
-            fields: ['user_id'],
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            fields: ['category'],
-        },
-        {
-            fields: ['status'],
-        },
-        {
-            unique: true,
-            fields: ['checksum_sha256', 'user_id'],
-            name: 'unique_document_per_user',
-        },
-    ],
+    },
 });
 
+documentSchema.index({ user_id: 1, createdAt: -1 });
+documentSchema.index({ checksum: 1 });
+
+export const Document = mongoose.model('Document', documentSchema);
 export default Document;

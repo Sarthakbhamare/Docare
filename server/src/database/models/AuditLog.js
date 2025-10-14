@@ -1,90 +1,78 @@
 /**
  * Audit Log Model
- * HIPAA-compliant audit trail for all PHI access
+ * Immutable audit trail for HIPAA compliance
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
 
-export const AuditLog = sequelize.define('AuditLog', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const auditLogSchema = new mongoose.Schema({
     user_id: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null,
+        index: true,
     },
     action: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-        comment: 'e.g., LOGIN, LOGOUT, VIEW_PROFILE, UPDATE_MEDICATION, DELETE_DOCUMENT',
+        type: String,
+        required: true,
+        index: true,
     },
     resource_type: {
-        type: DataTypes.STRING(100),
-        allowNull: true,
-        comment: 'Type of resource accessed',
+        type: String,
+        required: true,
     },
     resource_id: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        comment: 'ID of resource accessed',
+        type: String,
+        default: null,
     },
     ip_address: {
-        type: DataTypes.STRING(45),
-        allowNull: true,
+        type: String,
+        required: true,
     },
     user_agent: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
+        type: String,
+        default: null,
     },
     request_id: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        comment: 'Correlation ID for request tracing',
+        type: String,
+        required: true,
+        index: true,
     },
-    status: {
-        type: DataTypes.ENUM('success', 'failure', 'error'),
-        allowNull: false,
-    },
-    error_message: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+    status_code: {
+        type: Number,
+        default: null,
     },
     metadata: {
-        type: DataTypes.JSON,
-        allowNull: true,
-        comment: 'Additional contextual information',
+        type: mongoose.Schema.Types.Mixed,
+        default: {},
     },
 }, {
-    tableName: 'audit_logs',
-    indexes: [
-        {
-            fields: ['user_id'],
+    timestamps: { createdAt: true, updatedAt: false },
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            fields: ['action'],
-        },
-        {
-            fields: ['created_at'],
-        },
-        {
-            fields: ['resource_type', 'resource_id'],
-        },
-    ],
-    // Prevent updates and deletes on audit logs
-    timestamps: true,
-    updatedAt: false,
+    },
 });
 
-// Override destroy to prevent deletion
-AuditLog.beforeDestroy(() => {
-    throw new Error('Audit logs cannot be deleted');
+// Prevent deletion (immutable logs)
+auditLogSchema.pre('remove', function(next) {
+    next(new Error('Audit logs cannot be deleted'));
 });
 
+auditLogSchema.pre('deleteOne', function(next) {
+    next(new Error('Audit logs cannot be deleted'));
+});
+
+auditLogSchema.pre('deleteMany', function(next) {
+    next(new Error('Audit logs cannot be deleted'));
+});
+
+auditLogSchema.index({ createdAt: -1 });
+auditLogSchema.index({ user_id: 1, createdAt: -1 });
+
+export const AuditLog = mongoose.model('AuditLog', auditLogSchema);
 export default AuditLog;

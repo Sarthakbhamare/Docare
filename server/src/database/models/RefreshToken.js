@@ -1,65 +1,58 @@
 /**
  * Refresh Token Model
- * For JWT refresh token rotation
+ * JWT refresh token storage and rotation
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
 
-export const RefreshToken = sequelize.define('RefreshToken', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const refreshTokenSchema = new mongoose.Schema({
     user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
-        onDelete: 'CASCADE',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     token_hash: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+        type: String,
+        required: true,
         unique: true,
+        index: true,
     },
     expires_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
+        type: Date,
+        required: true,
+        index: true,
     },
     is_revoked: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        type: Boolean,
+        default: false,
+        index: true,
     },
     revoked_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        type: Date,
+        default: null,
     },
     ip_address: {
-        type: DataTypes.STRING(45),
-        allowNull: true,
+        type: String,
+        default: null,
     },
     user_agent: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
+        type: String,
+        default: null,
     },
 }, {
-    tableName: 'refresh_tokens',
-    indexes: [
-        {
-            fields: ['user_id'],
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            unique: true,
-            fields: ['token_hash'],
-        },
-        {
-            fields: ['expires_at'],
-        },
-    ],
+    },
 });
 
+refreshTokenSchema.index({ user_id: 1, is_revoked: 1 });
+
+export const RefreshToken = mongoose.model('RefreshToken', refreshTokenSchema);
 export default RefreshToken;

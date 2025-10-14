@@ -31,6 +31,7 @@ import billingRoutes from './routes/billing.js';
 import deviceRoutes from './routes/devices.js';
 import videoRoutes from './routes/video.js';
 import healthRoutes from './routes/health.js';
+import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
@@ -116,6 +117,7 @@ app.use('/api/v1/billing', billingRoutes);
 app.use('/api/v1/devices', deviceRoutes);
 app.use('/api/v1/video', videoRoutes);
 app.use('/api/v1/health', healthRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // WebSocket initialization
 initializeWebSocket(io);
@@ -138,8 +140,8 @@ const gracefulShutdown = async (signal) => {
 
     // Close database connections
     try {
-        const { sequelize } = await import('./database/connection.js');
-        await sequelize.close();
+        const mongoose = await import('mongoose');
+        await mongoose.default.connection.close();
         logger.info('Database connections closed');
     } catch (error) {
         logger.error('Error closing database:', error);

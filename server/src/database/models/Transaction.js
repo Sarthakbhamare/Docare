@@ -1,79 +1,86 @@
 /**
- * Transaction/Billing Model
+ * Transaction Model
+ * Billing and payment tracking
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
 
-export const Transaction = sequelize.define('Transaction', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const transactionSchema = new mongoose.Schema({
     user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     appointment_id: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: 'appointments',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Appointment',
+        default: null,
     },
     amount_cents: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: Number,
+        required: true,
+        min: 0,
     },
     currency: {
-        type: DataTypes.STRING(3),
-        defaultValue: 'USD',
+        type: String,
+        default: 'USD',
     },
     type: {
-        type: DataTypes.ENUM('charge', 'refund', 'adjustment'),
-        defaultValue: 'charge',
+        type: String,
+        enum: ['consultation', 'prescription', 'lab-test', 'copay', 'other'],
+        required: true,
     },
     status: {
-        type: DataTypes.ENUM('pending', 'succeeded', 'failed', 'cancelled', 'refunded'),
-        defaultValue: 'pending',
+        type: String,
+        enum: ['pending', 'completed', 'failed', 'refunded'],
+        default: 'pending',
+        required: true,
+        index: true,
     },
     payment_method: {
-        type: DataTypes.ENUM('card', 'insurance', 'bank_transfer'),
-        allowNull: false,
+        type: String,
+        enum: ['card', 'insurance', 'bank_transfer', 'cash', 'other'],
+        required: true,
     },
     payment_intent_id: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-        comment: 'Stripe payment intent ID',
+        type: String,
+        default: null,
     },
-    description: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
+    stripe_charge_id: {
+        type: String,
+        default: null,
     },
     receipt_url: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
+        type: String,
+        default: null,
     },
-    failure_reason: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
+    description: {
+        type: String,
+        default: null,
+    },
+    metadata: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {},
+    },
+    processed_at: {
+        type: Date,
+        default: null,
     },
 }, {
-    tableName: 'transactions',
-    indexes: [
-        {
-            fields: ['user_id'],
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            fields: ['status'],
-        },
-    ],
+    },
 });
 
+transactionSchema.index({ user_id: 1, createdAt: -1 });
+transactionSchema.index({ status: 1 });
+
+export const Transaction = mongoose.model('Transaction', transactionSchema);
 export default Transaction;

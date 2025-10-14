@@ -3,95 +3,98 @@
  * Tracks patient medications and adherence
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
 
-export const Medication = sequelize.define('Medication', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const medicationSchema = new mongoose.Schema({
     user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
-        onDelete: 'CASCADE',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     prescribed_by: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null,
     },
     name: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+        type: String,
+        required: true,
     },
     generic_name: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
+        type: String,
+        default: null,
     },
     dosage: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
+        type: String,
+        required: true,
     },
     frequency: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
+        type: String,
+        required: true,
     },
     route: {
-        type: DataTypes.ENUM('oral', 'topical', 'injection', 'inhalation', 'other'),
-        defaultValue: 'oral',
-    },
-    instructions: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+        type: String,
+        enum: ['oral', 'topical', 'injection', 'inhalation', 'other'],
+        default: 'oral',
     },
     start_date: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
+        type: Date,
+        required: true,
     },
     end_date: {
-        type: DataTypes.DATEONLY,
-        allowNull: true,
-    },
-    refills_remaining: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
+        type: Date,
+        default: null,
     },
     pharmacy: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
+        type: String,
+        default: null,
     },
-    status: {
-        type: DataTypes.ENUM('active', 'completed', 'discontinued', 'on-hold'),
-        defaultValue: 'active',
+    refills_remaining: {
+        type: Number,
+        default: 0,
+        min: 0,
+    },
+    instructions: {
+        type: String,
+        default: null,
+    },
+    side_effects: {
+        type: String,
+        default: null,
     },
     reminder_enabled: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
+        type: Boolean,
+        default: false,
     },
     reminder_times: {
-        type: DataTypes.JSON,
-        allowNull: true,
-        comment: 'Array of time strings for daily reminders',
+        type: [String],
+        default: [],
+    },
+    status: {
+        type: String,
+        enum: ['active', 'completed', 'discontinued'],
+        default: 'active',
+        required: true,
+        index: true,
+    },
+    notes: {
+        type: String,
+        default: null,
     },
 }, {
-    tableName: 'medications',
-    indexes: [
-        {
-            fields: ['user_id'],
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            fields: ['status'],
-        },
-    ],
+    },
 });
 
+medicationSchema.index({ user_id: 1, status: 1 });
+
+export const Medication = mongoose.model('Medication', medicationSchema);
 export default Medication;

@@ -1,60 +1,61 @@
 /**
  * MFA Token Model
- * For two-factor authentication codes
+ * Two-factor authentication codes
  */
 
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../connection.js';
+import mongoose from 'mongoose';
 
-export const MFAToken = sequelize.define('MFAToken', {
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-    },
+const mfaTokenSchema = new mongoose.Schema({
     user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: 'users',
-            key: 'id',
-        },
-        onDelete: 'CASCADE',
-    },
-    token_hash: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true,
     },
     type: {
-        type: DataTypes.ENUM('totp', 'sms', 'email', 'backup'),
-        allowNull: false,
+        type: String,
+        enum: ['totp', 'sms', 'email', 'backup'],
+        required: true,
+    },
+    token_hash: {
+        type: String,
+        required: true,
     },
     expires_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
+        type: Date,
+        required: true,
+        index: true,
     },
     is_used: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        type: Boolean,
+        default: false,
     },
     used_at: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        type: Date,
+        default: null,
     },
     attempts: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
+        type: Number,
+        default: 0,
+    },
+    ip_address: {
+        type: String,
+        default: null,
     },
 }, {
-    tableName: 'mfa_tokens',
-    indexes: [
-        {
-            fields: ['user_id'],
+    timestamps: true,
+    toJSON: {
+        transform: function(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret;
         },
-        {
-            fields: ['expires_at'],
-        },
-    ],
+    },
 });
 
+mfaTokenSchema.index({ user_id: 1, is_used: 1 });
+mfaTokenSchema.index({ expires_at: 1 });
+
+export const MFAToken = mongoose.model('MFAToken', mfaTokenSchema);
 export default MFAToken;
