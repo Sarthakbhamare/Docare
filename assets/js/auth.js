@@ -3,6 +3,24 @@ const USERS_KEY = 'docare.auth.users';
 
 const listeners = new Set();
 
+/**
+ * Simple password hashing using Web Crypto API
+ * In production, use bcrypt or similar on the backend
+ */
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+async function verifyPassword(password, hashedPassword) {
+    const hash = await hashPassword(password);
+    return hash === hashedPassword;
+}
+
 const createId = () => {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
         return crypto.randomUUID();
@@ -61,7 +79,7 @@ const loadFromStorage = () => {
 
 const sanitizeUser = userRecord => {
     if (!userRecord) return null;
-    const { password, ...rest } = userRecord;
+    const { password, passwordHash, ...rest } = userRecord;
     return {
         ...rest,
         avatarInitials: initialsFromName(rest.name),
@@ -88,7 +106,7 @@ export const auth = {
         return state.user;
     },
     login({ email, password }) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             if (!email || !password) {
                 reject(new Error('Email and password are required.'));
                 return;
@@ -98,7 +116,26 @@ export const auth = {
             const users = state.users || {};
             const record = users[normalizedEmail];
 
-            if (!record || record.password !== password) {
+            if (!record) {
+                reject(new Error('We could not verify those credentials.'));
+                return;
+            }
+
+            // Verify password (supports both hashed and legacy plain passwords)
+            let isValid = false;
+            if (record.passwordHash) {
+                // New hashed password
+                isValid = await verifyPassword(password, record.passwordHash);
+            } else if (record.password === password) {
+                // Legacy plain password - hash it now
+                isValid = true;
+                const hashedPassword = await hashPassword(password);
+                record.passwordHash = hashedPassword;
+                delete record.password;
+                upsertUserRecord(record);
+            }
+
+            if (!isValid) {
                 reject(new Error('We could not verify those credentials.'));
                 return;
             }
@@ -111,7 +148,7 @@ export const auth = {
         });
     },
     signup(payload) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const email = payload.email?.toString().trim().toLowerCase();
             const password = payload.password;
 
@@ -127,11 +164,14 @@ export const auth = {
 
             const name = payload.name?.toString().trim() || 'DoCare Member';
 
+            // Hash the password
+            const passwordHash = await hashPassword(password);
+
             const record = {
                 id: createId(),
                 name,
                 email,
-                password,
+                passwordHash, // Store hashed password
                 locale: payload.locale || 'en',
                 avatarInitials: initialsFromName(name),
                 profile: payload.profile || null,

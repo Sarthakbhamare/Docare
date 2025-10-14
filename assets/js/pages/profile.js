@@ -1,6 +1,7 @@
 import { i18n } from '../i18n.js';
 import { auth } from '../auth.js';
 import { showToast } from '../toast.js';
+import { showEmergencySOSModal } from '../emergency.js';
 
 const PROFILE_THEME_KEY = 'docare.theme';
 
@@ -252,7 +253,7 @@ export const ProfilePage = {
 
         const sosButton = document.querySelector('[data-sos-trigger]');
         sosButton?.addEventListener('click', () => {
-            showToast(i18n.t('profile.sosReady'), { variant: 'warning', duration: 3200 });
+            showEmergencySOSModal();
         });
     },
 };

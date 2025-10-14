@@ -19,6 +19,7 @@ import { BillingPage } from './pages/billing.js';
 import { DevicesPage } from './pages/devices.js';
 import { VideoCallPage } from './pages/video-call.js';
 import { ProfilePage } from './pages/profile.js';
+import { LibraryPage } from './pages/library.js';
 import { NotFoundPage } from './pages/not-found.js';
 
 const appRoot = document.querySelector('[data-app-root]');
@@ -65,6 +66,7 @@ const routes = {
     '/devices': DevicesPage,
     '/video-call': VideoCallPage,
     '/profile': ProfilePage,
+    '/library': LibraryPage,
 };
 
 const normalizePath = rawPath => {
