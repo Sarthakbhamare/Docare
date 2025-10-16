@@ -33,6 +33,9 @@ const dictionaries = {
             appointments: 'Appointments',
             billing: 'Billing',
             devices: 'Devices',
+            aiHealthCoach: 'AI Health Coach',
+            nutritionTracker: 'Nutrition Tracker',
+            mentalHealthScreening: 'Mental Health Screening',
             profile: 'Profile',
         },
         landing: {

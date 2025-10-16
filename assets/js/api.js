@@ -3,7 +3,7 @@
  * Centralized API client with error handling, loading states, and retry logic
  */
 
-const API_BASE_URL = 'https://api.docare.health'; // Future backend endpoint
+const API_BASE_URL = 'http://localhost:5000/api/v1'; // Backend server
 const API_TIMEOUT = 30000; // 30 seconds
 const MAX_RETRIES = 3;
 

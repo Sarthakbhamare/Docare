@@ -35,18 +35,20 @@ import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
+const PORT = process.env.PORT || 5000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
+        origin: NODE_ENV === 'development' ? '*' : (process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000']),
         methods: ['GET', 'POST'],
         credentials: true,
     },
+    transports: ['websocket', 'polling'],
+    allowEIO3: true,
 });
-
-const PORT = process.env.PORT || 5000;
-const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Security middleware
 app.use(helmet({
@@ -65,11 +67,25 @@ app.use(helmet({
     },
 }));
 
-// CORS configuration
+// CORS configuration - Allow all origins in development
 app.use(cors({
     origin: (origin, callback) => {
-        const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'];
-        if (!origin || allowedOrigins.includes(origin)) {
+        // Allow requests with no origin (like mobile apps, curl, Postman, or file://)
+        if (!origin) {
+            return callback(null, true);
+        }
+        
+        const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [
+            'http://localhost:3000',
+            'http://localhost:5500',
+            'http://127.0.0.1:3000',
+            'http://127.0.0.1:5500',
+        ];
+        
+        // In development, allow all origins
+        if (NODE_ENV === 'development') {
+            callback(null, true);
+        } else if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));

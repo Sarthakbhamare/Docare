@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoCare - Feature Test Page</title>
+    <link rel="stylesheet" href="assets/css/core.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            padding: 1.5rem;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--color-brand-primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            margin: 0 0 1rem 0;
+            color: var(--color-text-primary);
+        }
+        
+        .feature-card p {
+            margin: 0 0 1.5rem 0;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+        
+        .test-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--color-brand-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+        
+        .test-button:hover {
+            background: var(--color-brand-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎉 DoCare New Features Test Page</h1>
+        <p>Test all the newly implemented features below:</p>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Health Coach</h3>
+                <p>Personalized health insights, recommendations, and goal tracking powered by AI analysis.</p>
+                <a href="index.html#/ai-health-coach" class="test-button">Test AI Health Coach</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🥗</div>
+                <h3>Nutrition Tracker</h3>
+                <p>Comprehensive food logging, macro tracking, and nutritional analysis with progress visualization.</p>
+                <a href="index.html#/nutrition-tracker" class="test-button">Test Nutrition Tracker</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Mental Health Screening</h3>
+                <p>Clinical-grade mental health assessments including PHQ-9 and GAD-7 screening tools.</p>
+                <a href="index.html#/mental-health-screening" class="test-button">Test Mental Health Screening</a>
+            </div>
+        </div>
+        
+        <div style="margin-top: 3rem; padding: 2rem; background: rgba(46, 125, 255, 0.05); border-radius: var(--radius-md); border-left: 4px solid var(--color-brand-primary);">
+            <h3>✅ Feature Implementation Status</h3>
+            <ul style="color: var(--color-text-secondary); line-height: 1.8;">
+                <li><strong>AI Health Coach:</strong> ✅ Complete with health scoring, recommendations, and analytics</li>
+                <li><strong>Nutrition Tracker:</strong> ✅ Complete with food database, macro tracking, and charts</li>
+                <li><strong>Mental Health Screening:</strong> ✅ Complete with PHQ-9, GAD-7, and clinical recommendations</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="index.html" class="test-button" style="background: var(--color-success);">← Back to Main App</a>
+        </div>
+    </div>
+</body>
+</html>

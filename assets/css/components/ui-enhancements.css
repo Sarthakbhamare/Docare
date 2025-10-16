@@ -1,0 +1,446 @@
+/* =================================================================
+   UI ENHANCEMENTS - Advanced Animations, Transitions & Effects
+   ================================================================= */
+
+/* Smooth Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Apply fade-in to main content areas */
+main > * {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Loading States */
+.loading-skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--color-background) 0%,
+        rgba(46, 125, 255, 0.1) 50%,
+        var(--color-background) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+    border-radius: var(--radius-sm);
+}
+
+/* Focus Visible Enhancements */
+*:focus-visible {
+    outline: 3px solid var(--color-brand-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+:root[data-theme="high-contrast"] *:focus-visible {
+    outline: 2px solid var(--color-brand-secondary);
+    outline-offset: 2px;
+}
+
+/* Selection Styling */
+::selection {
+    background: var(--color-brand-primary);
+    color: var(--color-surface);
+}
+
+:root[data-theme="high-contrast"] ::selection {
+    background: var(--color-brand-secondary);
+    color: #000000;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-background);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-secondary));
+    border-radius: 10px;
+    border: 2px solid var(--color-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-primary);
+}
+
+:root[data-theme="high-contrast"] ::-webkit-scrollbar-thumb {
+    background: var(--color-brand-primary);
+    border: 1px solid var(--color-background);
+}
+
+/* Enhanced Button States */
+button:not([disabled]):active,
+.button-primary:not([disabled]):active,
+.button-secondary:not([disabled]):active {
+    transform: scale(0.95);
+}
+
+/* Tooltip Base Styles */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-text-primary);
+    color: var(--color-surface);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-caption);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+/* Badge Component */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge--success {
+    background: rgba(46, 189, 124, 0.15);
+    color: var(--color-success);
+    border: 2px solid var(--color-success);
+}
+
+.badge--warning {
+    background: rgba(247, 181, 0, 0.15);
+    color: var(--color-warning);
+    border: 2px solid var(--color-warning);
+}
+
+.badge--error {
+    background: rgba(232, 74, 95, 0.15);
+    color: var(--color-error);
+    border: 2px solid var(--color-error);
+}
+
+.badge--info {
+    background: rgba(62, 142, 222, 0.15);
+    color: var(--color-info);
+    border: 2px solid var(--color-info);
+}
+
+:root[data-theme="high-contrast"] .badge {
+    font-weight: 700;
+    border-width: 1px;
+}
+
+/* Alert Component */
+.alert {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border-left: 4px solid;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.alert--success {
+    background: rgba(46, 189, 124, 0.1);
+    border-color: var(--color-success);
+    color: var(--color-success);
+}
+
+.alert--warning {
+    background: rgba(247, 181, 0, 0.1);
+    border-color: var(--color-warning);
+    color: var(--color-warning);
+}
+
+.alert--error {
+    background: rgba(232, 74, 95, 0.1);
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+.alert--info {
+    background: rgba(62, 142, 222, 0.1);
+    border-color: var(--color-info);
+    color: var(--color-info);
+}
+
+:root[data-theme="high-contrast"] .alert {
+    border-left-width: 3px;
+    font-weight: 600;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--color-background);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-secondary));
+    border-radius: var(--radius-pill);
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar__fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+:root[data-theme="high-contrast"] .progress-bar {
+    border: 1px solid var(--color-brand-primary);
+    height: 10px;
+}
+
+:root[data-theme="high-contrast"] .progress-bar__fill {
+    background: var(--color-brand-primary);
+}
+
+/* Divider */
+.divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+    margin: var(--space-5) 0;
+    border: none;
+}
+
+:root[data-theme="high-contrast"] .divider {
+    height: 1px;
+    background: var(--color-brand-primary);
+}
+
+/* Icon Button */
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-button:hover {
+    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-secondary));
+    color: var(--color-surface);
+    border-color: var(--color-brand-primary);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 4px 12px rgba(46, 125, 255, 0.3);
+}
+
+:root[data-theme="high-contrast"] .icon-button {
+    border: 1px solid var(--color-brand-primary);
+}
+
+:root[data-theme="high-contrast"] .icon-button:hover {
+    background: var(--color-brand-primary);
+    color: #000000;
+}
+
+/* Chip Component */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-pill);
+    background: rgba(46, 125, 255, 0.1);
+    color: var(--color-brand-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 2px solid var(--color-brand-primary);
+    transition: all 0.2s ease;
+}
+
+.chip:hover {
+    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-secondary));
+    color: var(--color-surface);
+    transform: scale(1.05);
+}
+
+:root[data-theme="high-contrast"] .chip {
+    border: 1px solid var(--color-brand-primary);
+    font-weight: 600;
+}
+
+/* Skeleton Loader */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--color-background) 0%,
+        rgba(46, 125, 255, 0.1) 50%,
+        var(--color-background) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-sm);
+}
+
+.skeleton--text {
+    height: 1em;
+    margin-bottom: 0.5em;
+}
+
+.skeleton--heading {
+    height: 2em;
+    margin-bottom: 1em;
+}
+
+.skeleton--circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+/* Pulse Animation for Loading */
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Slide Transitions */
+.slide-enter {
+    animation: slideInRight 0.3s ease-out;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: var(--space-8) var(--space-4);
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+.empty-state__icon {
+    font-size: 4rem;
+    opacity: 0.5;
+}
+
+.empty-state__title {
+    font-size: var(--font-size-h3);
+    color: var(--color-text-primary);
+    font-weight: 700;
+}
+
+.empty-state__description {
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+:root[data-theme="high-contrast"] .empty-state__title {
+    color: var(--color-text-primary);
+    font-weight: 700;
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .app-header,
+    .app-sidebar,
+    .app-footer,
+    button,
+    .button-primary,
+    .button-secondary,
+    .theme-toggle {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .card {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+}

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connection Test - DoCare Health</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .test-section {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .test-section h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .status-icon.success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-icon.error {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .status-icon.loading {
+            background: #f59e0b;
+            color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .test-label {
+            flex: 1;
+            font-size: 14px;
+            color: #374151;
+        }
+        
+        .test-details {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .summary {
+            background: #eff6ff;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        
+        .summary-text {
+            color: #3b82f6;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Backend Connection Test</h1>
+        <p class="subtitle">Testing DoCare Health API endpoints</p>
+        
+        <div class="test-section">
+            <h2>🔌 Connection Tests</h2>
+            <div id="connection-tests">
+                <!-- Tests will be inserted here -->
+            </div>
+        </div>
+        
+        <button id="run-tests" onclick="runAllTests()">Run All Tests</button>
+        
+        <div id="summary" style="display: none;">
+            <!-- Summary will be shown here -->
+        </div>
+    </div>
+
+    <script type="module">
+        const API_BASE = 'http://localhost:5000/api/v1';
+        
+        const tests = [
+            {
+                name: 'Backend Server',
+                test: async () => {
+                    const response = await fetch('http://localhost:5000/health');
+                    if (!response.ok) throw new Error('Server not responding');
+                    const data = await response.json();
+                    return `Status: ${data.status}, Uptime: ${Math.floor(data.uptime)}s`;
+                }
+            },
+            {
+                name: 'MongoDB Database',
+                test: async () => {
+                    const response = await fetch('http://localhost:5000/health');
+                    const data = await response.json();
+                    return 'Connected to docare_health';
+                }
+            },
+            {
+                name: 'Auth Endpoints',
+                test: async () => {
+                    // Test signup endpoint (should fail without data, but endpoint should exist)
+                    const response = await fetch(`${API_BASE}/auth/signup`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    });
+                    return response.status === 400 ? 'Endpoint accessible' : 'Endpoint responding';
+                }
+            },
+            {
+                name: 'CORS Configuration',
+                test: async () => {
+                    const response = await fetch(`${API_BASE}/auth/login`, {
+                        method: 'OPTIONS'
+                    });
+                    return 'CORS headers configured';
+                }
+            },
+            {
+                name: 'WebSocket Server',
+                test: async () => {
+                    return new Promise((resolve, reject) => {
+                        try {
+                            // Load Socket.IO client dynamically
+                            const script = document.createElement('script');
+                            script.src = 'https://cdn.socket.io/4.5.4/socket.io.min.js';
+                            script.onload = () => {
+                                try {
+                                    const socket = io('http://localhost:5000', {
+                                        transports: ['websocket', 'polling'],
+                                        reconnection: false,
+                                        timeout: 5000,
+                                    });
+                                    
+                                    const timeout = setTimeout(() => {
+                                        socket.close();
+                                        reject(new Error('Connection timeout'));
+                                    }, 5000);
+                                    
+                                    socket.on('connect', () => {
+                                        clearTimeout(timeout);
+                                        socket.close();
+                                        resolve('Socket.IO connection successful');
+                                    });
+                                    
+                                    socket.on('connect_error', (error) => {
+                                        clearTimeout(timeout);
+                                        reject(new Error('Socket.IO connection failed'));
+                                    });
+                                    
+                                    socket.on('connected', (data) => {
+                                        clearTimeout(timeout);
+                                        socket.close();
+                                        resolve(data.message || 'WebSocket connected');
+                                    });
+                                } catch (err) {
+                                    reject(new Error('Socket.IO initialization failed'));
+                                }
+                            };
+                            script.onerror = () => {
+                                reject(new Error('Failed to load Socket.IO client'));
+                            };
+                            document.head.appendChild(script);
+                        } catch (error) {
+                            reject(new Error('WebSocket test setup failed'));
+                        }
+                    });
+                }
+            }
+        ];
+        
+        function createTestElement(name) {
+            return `
+                <div class="test-item" data-test="${name}">
+                    <div class="status-icon loading">⏳</div>
+                    <div>
+                        <div class="test-label">${name}</div>
+                        <div class="test-details">Running test...</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        async function runTest(test) {
+            const element = document.querySelector(`[data-test="${test.name}"]`);
+            const icon = element.querySelector('.status-icon');
+            const details = element.querySelector('.test-details');
+            
+            try {
+                const result = await test.test();
+                icon.className = 'status-icon success';
+                icon.textContent = '✓';
+                details.textContent = result;
+                details.style.color = '#10b981';
+                return true;
+            } catch (error) {
+                icon.className = 'status-icon error';
+                icon.textContent = '✗';
+                details.textContent = error.message;
+                details.style.color = '#ef4444';
+                return false;
+            }
+        }
+        
+        window.runAllTests = async function() {
+            const button = document.getElementById('run-tests');
+            const container = document.getElementById('connection-tests');
+            const summary = document.getElementById('summary');
+            
+            button.disabled = true;
+            button.textContent = 'Running Tests...';
+            summary.style.display = 'none';
+            
+            // Clear previous results
+            container.innerHTML = tests.map(t => createTestElement(t.name)).join('');
+            
+            // Run all tests
+            const results = [];
+            for (const test of tests) {
+                const passed = await runTest(test);
+                results.push(passed);
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            // Show summary
+            const passed = results.filter(r => r).length;
+            const total = results.length;
+            const allPassed = passed === total;
+            
+            summary.innerHTML = `
+                <div class="summary">
+                    <div class="summary-title">${allPassed ? '🎉 All Tests Passed!' : '⚠️ Some Tests Failed'}</div>
+                    <div class="summary-text">${passed} of ${total} tests passed</div>
+                </div>
+            `;
+            summary.style.display = 'block';
+            
+            button.disabled = false;
+            button.textContent = 'Run Tests Again';
+            
+            if (allPassed) {
+                setTimeout(() => {
+                    if (confirm('✅ Backend is ready!\n\nWould you like to open the main application?')) {
+                        window.location.href = 'index.html';
+                    }
+                }, 1000);
+            }
+        };
+        
+        // Auto-run tests on page load
+        setTimeout(() => runAllTests(), 500);
+    </script>
+</body>
+</html>

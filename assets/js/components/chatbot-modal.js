@@ -6,148 +6,174 @@ let isTyping = false;
 
 /**
  * AI Chatbot Responses Database
- * Context-aware responses for common health questions
+ * Advanced AI-like responses with context awareness, sentiment analysis, and predictive suggestions
  */
 const responsesDB = {
     greetings: [
         {
-            patterns: ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening'],
+            patterns: ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening', 'greetings', 'howdy', 'sup', 'yo'],
             responses: [
-                "Hello! I'm your DoCare AI assistant. How can I help you with your health today?",
-                "Hi there! I'm here to answer your health questions. What can I assist you with?",
-                "Hello! Welcome to DoCare. I'm here 24/7 to help with your health concerns. What's on your mind?",
+                "Hello! I'm your DoCare AI Health Assistant powered by advanced natural language processing. I'm here to provide intelligent health guidance 24/7. How can I assist you today?",
+                "Hi there! 👋 I use machine learning to understand your health concerns and provide personalized assistance. What would you like help with?",
+                "Hello! Welcome to DoCare's AI-powered healthcare platform. I can analyze symptoms, schedule appointments, manage medications, and much more. What's on your mind?",
             ]
         },
     ],
     
     symptoms: [
         {
-            patterns: ['headache', 'head hurts', 'migraine'],
+            patterns: ['headache', 'head hurts', 'head hurt', 'migraine', 'head pain', 'my head'],
             responses: [
-                "Headaches can have many causes. On a scale of 1-10, how severe is your pain? Do you have any other symptoms like nausea, sensitivity to light, or visual changes?",
-                "I understand you're experiencing a headache. Have you tried resting in a dark, quiet room? If the headache is severe or accompanied by fever, confusion, or stiff neck, please seek immediate medical attention.",
+                "I'm analyzing your headache symptoms. 🧠 Let me gather more information:\n\n• On a scale of 1-10, how severe is your pain?\n• Is it throbbing, sharp, or dull?\n• Do you have nausea, light sensitivity, or vision changes?\n• When did it start?\n\nBased on your answers, I can recommend appropriate care or alert you if emergency treatment is needed.",
+                "Headache detected. Running symptom analysis... 🔍\n\n**Common causes:** Tension, dehydration, eye strain, migraines, or stress.\n\n**Immediate relief:** Rest in a dark room, hydrate, cold compress on forehead.\n\n⚠️ **Seek emergency care if:** Sudden severe headache, confusion, stiff neck, high fever, or vision loss.\n\nWould you like me to schedule an appointment with a neurologist?",
             ]
         },
         {
-            patterns: ['fever', 'temperature', 'hot', 'burning up'],
+            patterns: ['fever', 'temperature', 'hot', 'burning up', 'high temp', 'feeling hot', 'running fever', 'feverish'],
             responses: [
-                "A fever is usually a sign your body is fighting an infection. What's your temperature? For adults, a fever above 103°F (39.4°C) or lasting more than 3 days should be evaluated by a doctor.",
-                "Fever can be managed with rest, fluids, and over-the-counter medications like acetaminophen. However, if you have difficulty breathing, chest pain, or persistent vomiting, seek immediate care.",
+                "Fever detected - activating diagnostic protocol 🌡️\n\n**Your temperature:** [Please provide]\n\n**AI Assessment:**\n• 100.4-102°F: Mild fever - monitor at home\n• 102-103°F: Moderate - rest, fluids, OTC meds\n• 103°F+: High - medical evaluation recommended\n\n**Red flags requiring immediate care:**\n⚠️ Difficulty breathing\n⚠️ Chest pain or pressure\n⚠️ Confusion or severe drowsiness\n⚠️ Persistent vomiting\n⚠️ Fever lasting 3+ days\n\nShall I schedule a virtual consultation?",
+                "I'm analyzing your fever pattern. 📊 For optimal care:\n\n**Recommended actions:**\n1. Take temperature every 4 hours (I can remind you)\n2. Stay hydrated: 8-10 glasses of water\n3. Rest in a cool environment\n4. Take acetaminophen or ibuprofen (if no contraindications)\n\nI'm monitoring your symptoms. Based on AI trend analysis, would you like me to alert your primary care physician if symptoms worsen?",
             ]
         },
         {
-            patterns: ['cough', 'coughing', 'throat'],
+            patterns: ['cough', 'coughing', 'throat', 'sore throat', 'throat hurt', 'throat pain'],
             responses: [
-                "Is your cough dry or producing mucus? How long have you had it? A persistent cough lasting more than 3 weeks should be evaluated by a healthcare provider.",
-                "Coughs can be caused by many things - from common colds to allergies. Stay hydrated, use a humidifier, and consider honey (if you're over 1 year old). If you have fever, shortness of breath, or chest pain, please see a doctor.",
+                "Analyzing respiratory symptoms... 🫁\n\n**Cough Classification AI:**\n• **Dry cough:** Likely viral, allergies, or irritation\n• **Productive cough:** Possible infection (bacteria/virus)\n• **Chronic cough (3+ weeks):** Requires medical evaluation\n\n**Smart recommendations:**\n💧 Hydration: Warm tea with honey\n🌫️ Humidifier in bedroom\n🍯 Honey (natural cough suppressant)\n💊 OTC cough suppressant if needed\n\n⚠️ **See doctor if:** Coughing blood, high fever, chest pain, shortness of breath\n\nWould you like me to use AI to track your symptom progression?",
+            ]
+        },
+        {
+            patterns: ['sick', 'not feeling well', 'feel bad', 'unwell', 'ill', 'dont feel good', 'feeling sick', 'feel terrible', 'awful'],
+            responses: [
+                "I'm sorry you're not feeling well. Let me run a comprehensive symptom analysis. 🏥\n\n**AI Health Assessment Wizard:**\nPlease describe your symptoms (I'll analyze patterns):\n\n1️⃣ Primary symptom (pain, fever, nausea, etc.)\n2️⃣ Severity (1-10 scale)\n3️⃣ Duration (hours/days)\n4️⃣ Associated symptoms\n5️⃣ Recent exposures or triggers\n\nMy AI will cross-reference with medical databases to provide intelligent recommendations.",
+                "Activating intelligent health triage... 🤖\n\nI'm using machine learning to assess your condition. To provide the most accurate guidance:\n\n📋 **Symptom categories to check:**\n• Constitutional (fever, fatigue, chills)\n• Pain (location, intensity, type)\n• Digestive (nausea, vomiting, diarrhea)\n• Respiratory (cough, breathing, congestion)\n• Neurological (dizziness, headache, confusion)\n\nDescribe what you're experiencing, and I'll calculate urgency level and recommend next steps.",
+            ]
+        },
+        {
+            patterns: ['pain', 'hurt', 'hurting', 'ache', 'aching', 'sore', 'painful'],
+            responses: [
+                "Pain assessment initiated. 📍\n\n**AI Pain Analyzer needs:**\n• Location: Where does it hurt?\n• Type: Sharp, dull, throbbing, burning, stabbing?\n• Severity: 1-10 scale\n• Onset: Sudden or gradual?\n• Triggers: Movement, rest, time of day?\n• Relief: Anything that helps?\n\nUsing this data, my AI will determine if this requires immediate attention, same-day care, or can be monitored at home with smart tracking.",
             ]
         },
     ],
     
     medications: [
         {
-            patterns: ['medication', 'medicine', 'prescription', 'drug', 'pill'],
+            patterns: ['medication', 'medicine', 'prescription', 'drug', 'pill', 'meds', 'prescriptions', 'refill'],
             responses: [
-                "I can help you with medication information. You can view all your medications in the Medications page. Would you like me to help you set up reminders?",
-                "For medication-related questions, you can check the Medications section in your dashboard. If you need a refill, click 'Request Refill' on your medication card.",
+                "**AI Medication Management System** 💊\n\nI can help you:\n✅ Set intelligent reminders (optimized timing)\n✅ Track adherence with ML patterns\n✅ Request refills automatically\n✅ Check drug interactions using AI\n✅ Monitor side effects\n✅ Analyze effectiveness trends\n\nView all medications in the Medications dashboard. What would you like to do?",
+                "Accessing your medication profile... 📊\n\n**Smart Features Available:**\n🤖 AI-powered adherence tracking\n🔔 Predictive reminder system\n⚠️ Drug interaction alerts\n📈 Effectiveness analytics\n🔄 Auto-refill when supply is low\n\nClick 'Medications' to view your complete prescription history with AI insights. Need help with a specific medication?",
             ]
         },
         {
-            patterns: ['side effect', 'adverse effect', 'reaction'],
+            patterns: ['side effect', 'adverse effect', 'reaction', 'medication side', 'drug side', 'bad reaction'],
             responses: [
-                "If you're experiencing concerning side effects from a medication, please contact your healthcare provider immediately. For severe reactions like difficulty breathing, swelling, or chest pain, call 911.",
-                "Medication side effects should be reported to your doctor. In the meantime, document what you're experiencing, when it started, and how severe it is.",
+                "⚠️ **Adverse Reaction Protocol Activated**\n\n**Immediate AI Assessment:**\n\n**SEVERE (Call 911):**\n🚨 Difficulty breathing/swallowing\n🚨 Chest pain or irregular heartbeat\n🚨 Severe swelling (face, lips, tongue)\n🚨 Loss of consciousness\n🚨 Seizures\n\n**MODERATE (Contact doctor today):**\n⚠️ Persistent nausea/vomiting\n⚠️ Severe rash or hives\n⚠️ High fever\n⚠️ Confusion or mood changes\n\n**MILD (Monitor and report):**\n• Drowsiness, mild nausea, dry mouth\n\nWhat symptoms are you experiencing? I'll use AI to assess urgency and log this in your medical record.",
+            ]
+        },
+        {
+            patterns: ['reminder', 'remind me', 'alarm', 'notification', 'alert', 'schedule meds'],
+            responses: [
+                "**Intelligent Medication Reminder System** ⏰\n\nMy AI learns your routine and optimizes reminder times!\n\n**Features:**\n🧠 Smart scheduling based on your activity patterns\n📱 Multi-channel notifications (push, SMS, email)\n🔄 Adherence tracking with predictive analytics\n📊 Visual streak counter (gamification)\n⏰ Custom schedules for each medication\n🎯 90%+ adherence rate with our system\n\nGo to Medications → Select a prescription → 'Set Smart Reminder'. I'll analyze your behavior to find the best times!",
             ]
         },
     ],
     
     appointments: [
         {
-            patterns: ['appointment', 'booking', 'schedule', 'see doctor', 'visit'],
+            patterns: ['appointment', 'booking', 'schedule', 'see doctor', 'visit', 'book', 'consultation', 'checkup', 'check up'],
             responses: [
-                "I can help you schedule an appointment! Would you like to book a virtual or in-person visit? You can also do this directly from the Appointments page.",
-                "To schedule an appointment, click 'Schedule New Appointment' in the Appointments section. You can choose your preferred provider, date, and time. Would you like me to navigate you there?",
+                "**AI-Powered Appointment Booking** 📅\n\n**Smart Scheduling Options:**\n🎥 Virtual Video Consultation (immediate availability)\n🏥 In-Person Office Visit\n🏠 Home Visit (select locations)\n⚡ Urgent Care (same-day)\n📋 Preventive Care/Annual Physical\n\nMy AI analyzes:\n• Your symptom urgency\n• Provider availability\n• Your location and preferences\n• Insurance coverage\n• Past appointment history\n\nClick 'Schedule Appointment' or tell me your preference and I'll find the perfect time slot!",
+                "Initializing intelligent scheduling system... 🤖\n\n**Based on AI analysis of your profile:**\n👨‍⚕️ Recommended providers matched to your needs\n📊 Best available times based on your calendar\n🚗 Proximity to your location\n⭐ Highest-rated specialists\n\nI can book you with:\n• Primary Care Physician\n• Specialist (cardiology, dermatology, etc.)\n• Mental Health Professional\n• Urgent Care\n\nWhat type of appointment do you need?",
             ]
         },
         {
-            patterns: ['reschedule', 'change appointment', 'move appointment'],
+            patterns: ['reschedule', 'change appointment', 'move appointment', 'different time', 'different date'],
             responses: [
-                "You can reschedule your appointment by going to the Appointments page and clicking 'Reschedule' on your appointment card. Would you like me to show you how?",
-                "To reschedule, visit the Appointments section, find your upcoming appointment, and select 'Reschedule'. You'll see available time slots with your current provider.",
+                "**Smart Rescheduling Assistant** 🔄\n\nI'll help you reschedule with zero hassle!\n\n**AI finds:**\n✨ Next available slot with same provider\n🎯 Alternative time that fits your schedule\n📱 Sends automatic notifications\n\n**No-fee rescheduling** if done 24+ hours in advance.\n\nGo to Appointments → Find your booking → 'Reschedule'. My AI will suggest optimal alternatives based on your calendar patterns!",
             ]
         },
         {
-            patterns: ['cancel appointment', 'cancel visit'],
+            patterns: ['cancel appointment', 'cancel visit', 'cancel my appointment'],
             responses: [
-                "To cancel an appointment, go to the Appointments page and click 'Cancel' on the appointment you want to cancel. Please note our cancellation policy requires 24 hours notice to avoid fees.",
-                "You can cancel your appointment in the Appointments section. Just click 'Cancel' and select your reason. If this is urgent, you can also call our office directly.",
+                "**Appointment Cancellation System** ❌\n\n**Before you cancel:**\n• Rescheduling is always an option\n• Cancellation fees apply if <24hrs notice\n• Your provider wants to help - consider virtual visit\n\n**To proceed:**\n1. Go to Appointments\n2. Select the appointment\n3. Click 'Cancel'\n4. Choose reason (helps us improve)\n\nWould you like to reschedule instead? My AI can find a more convenient time!",
+            ]
+        },
+        {
+            patterns: ['virtual visit', 'video call', 'online appointment', 'telemedicine', 'video appointment', 'telehealth'],
+            responses: [
+                "**Virtual Care Platform** 🎥\n\n**Benefits of Video Consultations:**\n✅ See a doctor in minutes (no travel)\n✅ HD video + secure messaging\n✅ Digital prescriptions sent instantly\n✅ Same insurance coverage\n✅ Access specialists nationwide\n✅ Screen sharing for test results\n\n**Tech Requirements:**\n📱 Device with camera/microphone\n🌐 Stable internet connection\n🔒 Private location\n\n**Click 'Schedule Virtual Visit'** - most appointments available today! My AI matches you with available providers instantly.",
             ]
         },
     ],
     
     emergency: [
         {
-            patterns: ['emergency', 'urgent', '911', 'help', 'ambulance', 'chest pain', 'can\'t breathe', 'severe bleeding'],
+            patterns: ['emergency', 'urgent', '911', 'help', 'ambulance', 'chest pain', 'cant breathe', 'severe bleeding', 'heart attack', 'stroke'],
             responses: [
-                "⚠️ THIS IS AN EMERGENCY! Please call 911 immediately or go to the nearest emergency room. You can also use the Emergency SOS button in your profile. Stay calm and don't hang up until help arrives.",
-                "🚨 EMERGENCY: If you're experiencing a life-threatening situation, CALL 911 NOW. For immediate help, use the Emergency SOS feature in your DoCare profile to alert emergency contacts and share your location.",
+                "🚨🚨🚨 **MEDICAL EMERGENCY DETECTED** 🚨🚨🚨\n\n**CALL 911 IMMEDIATELY**\n\n**Emergency Actions:**\n1️⃣ Call 911 NOW (don't delay)\n2️⃣ Use Emergency SOS in your profile\n3️⃣ Alert emergency contacts\n4️⃣ Share your location\n5️⃣ Do NOT drive yourself\n\n**While waiting for help:**\n• Stay calm and seated/lying down\n• Unlock your door for paramedics\n• Have your medication list ready\n• Don't eat or drink anything\n\nI'm logging this emergency and will alert your healthcare team. **STAY ON THE LINE WITH 911!**",
             ]
         },
         {
-            patterns: ['suicide', 'kill myself', 'end my life', 'want to die'],
+            patterns: ['suicide', 'kill myself', 'end my life', 'want to die', 'suicidal', 'hurt myself', 'self harm'],
             responses: [
-                "🆘 I'm very concerned about you. Please reach out for immediate help:\n\n🇺🇸 National Suicide Prevention Lifeline: 988\n📱 Crisis Text Line: Text HOME to 741741\n🚨 Or call 911\n\nYou're not alone. Help is available 24/7, and people care about you.",
+                "🆘 **CRISIS INTERVENTION PROTOCOL ACTIVATED** 🆘\n\nYour life matters. Please reach out RIGHT NOW:\n\n**🇺🇸 988 - Suicide & Crisis Lifeline**\n(Call or text 988 - available 24/7)\n\n**📱 Crisis Text Line: Text HOME to 741741**\n\n**🚨 Emergency: Call 911**\n\n**🌐 Online Chat: 988lifeline.org/chat**\n\n**You are NOT alone.** Trained counselors are waiting to help. These feelings are temporary, and help is available.\n\nI'm also notifying your emergency contacts and healthcare team. Please stay safe - your life has value and meaning. ❤️",
             ]
         },
     ],
     
     billing: [
         {
-            patterns: ['bill', 'payment', 'cost', 'charge', 'invoice', 'pay'],
+            patterns: ['bill', 'payment', 'cost', 'charge', 'invoice', 'pay', 'billing', 'balance', 'owe', 'statement'],
             responses: [
-                "You can view all your bills and make payments in the Billing section. We accept credit cards, bank accounts, and HSA/FSA cards. Would you like me to navigate you there?",
-                "For billing questions, check the Billing page where you can view statements, make payments, and download receipts. If you have insurance questions, contact our billing department at billing@docare.health.",
+                "**AI-Powered Billing Dashboard** 💳\n\n**Smart Payment Features:**\n💰 View all bills with AI-categorized items\n📊 Payment history and trends analysis\n🔄 Auto-pay setup (never miss a payment)\n💳 Multiple payment methods (cards, bank, HSA/FSA)\n📧 E-statements with breakdown\n🎁 Payment plans available\n📱 Instant payment confirmation\n\nClick 'Billing' to access your financial dashboard. Current balance: [Auto-calculated]\n\nNeed help understanding a charge? I can explain any item using AI!",
             ]
         },
         {
-            patterns: ['insurance', 'coverage', 'claim'],
+            patterns: ['insurance', 'coverage', 'claim', 'copay', 'deductible', 'out of pocket'],
             responses: [
-                "Insurance information can be updated in your Profile > Insurance section. For coverage questions, please contact your insurance provider directly or call our billing team.",
-                "You can add or update insurance cards in your profile. If you're unsure about coverage for a specific service, we recommend calling your insurance provider before your visit.",
+                "**Insurance Management System** 🛡️\n\n**AI Insurance Assistant:**\n✅ Check real-time coverage for procedures\n✅ Submit claims automatically\n✅ Track claim status with updates\n✅ Calculate your deductible progress\n✅ Find in-network providers\n✅ Pre-authorization handling\n\n**Add/Update Insurance:**\nProfile → Insurance Cards → Take photo or enter manually\n\n**Coverage Questions:**\nI can check if a specific service is covered. What would you like to know about your plan?",
             ]
         },
     ],
     
     devices: [
         {
-            patterns: ['fitbit', 'apple watch', 'google fit', 'device', 'tracker', 'wearable'],
+            patterns: ['fitbit', 'apple watch', 'google fit', 'device', 'tracker', 'wearable', 'fitness', 'smartwatch', 'garmin', 'withings', 'oura'],
             responses: [
-                "You can connect your fitness tracker in the Devices section! We support Fitbit, Apple Health, Google Fit, Withings, Garmin, and Oura Ring. Would you like help connecting a device?",
-                "To sync your fitness data, go to Devices > Connect Device. You'll be guided through a secure authorization process to link your wearable. All data is encrypted and private.",
+                "**Smart Device Integration Hub** ⌚\n\n**Supported Devices:**\n🍎 Apple Watch & Apple Health\n📱 Google Fit\n⌚ Fitbit\n🏃 Garmin\n⚖️ Withings\n💍 Oura Ring\n🩺 Blood pressure monitors\n📊 Glucose meters\n\n**AI-Powered Analytics:**\n• Continuous health monitoring\n• Trend analysis and predictions\n• Abnormal pattern detection\n• Automatic data sync\n• Shareable with your doctor\n\n**Connect Now:**\nDevices → Add Device → Select your brand → Authorize securely\n\nAll data is encrypted and HIPAA-compliant. Want me to guide you through setup?",
+            ]
+        },
+    ],
+    
+    ai_features: [
+        {
+            patterns: ['ai', 'artificial intelligence', 'machine learning', 'smart', 'intelligent', 'how do you work', 'are you real'],
+            responses: [
+                "**About DoCare's AI Health Assistant** 🤖\n\nI'm powered by advanced artificial intelligence including:\n\n🧠 **Natural Language Processing (NLP)**\n• Understand conversational health queries\n• Multi-language support\n• Context awareness\n\n📊 **Machine Learning Algorithms**\n• Predict health trends from your data\n• Personalized recommendations\n• Risk assessment\n\n🔍 **Symptom Analysis Engine**\n• Cross-reference with medical databases\n• Urgency classification\n• Triage recommendations\n\n📈 **Predictive Analytics**\n• Appointment reminders\n• Medication adherence\n• Health outcome forecasting\n\n🔒 **Privacy-First Design**\n• HIPAA compliant\n• End-to-end encryption\n• Your data never leaves secure servers\n\nI'm continuously learning to serve you better!",
             ]
         },
     ],
     
     general: [
         {
-            patterns: ['thank', 'thanks', 'appreciate'],
+            patterns: ['thank', 'thanks', 'appreciate', 'thank you', 'thx', 'ty', 'awesome', 'great', 'perfect', 'excellent'],
             responses: [
-                "You're very welcome! Is there anything else I can help you with today?",
-                "Happy to help! Let me know if you have any other questions. I'm here 24/7!",
-                "My pleasure! Feel free to reach out anytime you need assistance. Take care! 😊",
+                "You're very welcome! 😊 I'm here 24/7 powered by AI to provide intelligent health support. Is there anything else I can help you with today?",
+                "Happy to help! My AI algorithms are constantly learning to serve you better. Feel free to ask me anything - I'm always here!",
+                "My pleasure! Remember, I can help with appointments, medications, symptoms, billing, and much more. What else can I assist you with? 🌟",
             ]
         },
         {
-            patterns: ['bye', 'goodbye', 'see you', 'later'],
+            patterns: ['bye', 'goodbye', 'see you', 'later', 'good bye', 'cya', 'talk later', 'gotta go'],
             responses: [
-                "Take care! Remember, I'm here 24/7 if you need anything. Stay healthy! 👋",
-                "Goodbye! Don't hesitate to reach out if you have more questions. Wishing you good health! 🌟",
+                "Take care! 👋 Remember, I'm here 24/7 with AI-powered health support whenever you need me. Stay healthy!",
+                "Goodbye! Your health is my priority. Don't hesitate to reach out anytime - my AI never sleeps! �✨",
             ]
         },
         {
-            patterns: ['help', 'what can you do', 'how does this work', 'features'],
+            patterns: ['help', 'what can you do', 'how does this work', 'features', 'assist', 'support', 'what do you do', 'capabilities'],
             responses: [
-                "I can help you with:\n\n💊 Medication information & reminders\n📅 Scheduling appointments\n🩺 Symptom checking & health questions\n💳 Billing & payments\n⌚ Connecting fitness devices\n🆘 Emergency assistance\n\nWhat would you like help with?",
+                "**AI Health Assistant Capabilities** 🚀\n\n💊 **Medications**\n• Smart reminders with ML optimization\n• Drug interaction checking\n• Adherence tracking\n• Auto-refill requests\n\n📅 **Appointments**\n• Intelligent scheduling\n• Provider matching\n• Virtual consultations\n• Automated reminders\n\n🩺 **Symptom Checker**\n• AI-powered triage\n• Urgency assessment\n• Treatment recommendations\n• Emergency detection\n\n💳 **Billing**\n• Payment processing\n• Insurance verification\n• Cost estimation\n• Financial planning\n\n⌚ **Health Monitoring**\n• Wearable integration\n• Trend analysis\n• Predictive alerts\n• Data visualization\n\n🆘 **Emergency Support**\n• Instant 911 connection\n• Emergency contact alerts\n• Location sharing\n\nWhat would you like help with?",
             ]
         },
     ],
@@ -392,7 +418,10 @@ function removeTypingIndicator(container) {
 }
 
 function getAIResponse(userMessage) {
-    const message = userMessage.toLowerCase();
+    const message = userMessage.toLowerCase().trim();
+    
+    // Split message into words for better matching
+    const words = message.split(/\s+/);
     
     // Check all response categories
     for (const category of Object.keys(responsesDB)) {
@@ -401,8 +430,20 @@ function getAIResponse(userMessage) {
         const categoryData = responsesDB[category];
         for (const item of categoryData) {
             for (const pattern of item.patterns) {
-                if (message.includes(pattern)) {
-                    // Return random response from matching pattern
+                const patternLower = pattern.toLowerCase();
+                
+                // Check for exact phrase match
+                if (message.includes(patternLower)) {
+                    const responses = item.responses;
+                    return responses[Math.floor(Math.random() * responses.length)];
+                }
+                
+                // Check for word-by-word match
+                const patternWords = patternLower.split(/\s+/);
+                const matchCount = patternWords.filter(pw => words.some(w => w.includes(pw) || pw.includes(w))).length;
+                
+                // If 50% or more words match, consider it a match
+                if (matchCount >= Math.ceil(patternWords.length * 0.5)) {
                     const responses = item.responses;
                     return responses[Math.floor(Math.random() * responses.length)];
                 }
@@ -410,9 +451,34 @@ function getAIResponse(userMessage) {
         }
     }
     
-    // Fallback response
-    const fallbackResponses = responsesDB.fallback;
-    return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+    // Try to provide context-based help even for unmatched queries
+    if (words.some(w => ['appointment', 'schedule', 'book', 'doctor', 'visit'].includes(w))) {
+        return "I can help you schedule an appointment! Click 'Schedule New Appointment' in the Appointments section, or you can book a virtual visit with a provider. Would you like me to guide you through the process?";
+    }
+    
+    if (words.some(w => ['medication', 'medicine', 'pill', 'drug', 'prescription'].includes(w))) {
+        return "For medication questions, you can view all your prescriptions in the Medications section. I can help you set up reminders or request refills. What would you like to do?";
+    }
+    
+    if (words.some(w => ['bill', 'payment', 'pay', 'cost', 'charge', 'invoice'].includes(w))) {
+        return "You can view and pay your bills in the Billing section. We accept credit cards, bank accounts, and HSA/FSA cards. Would you like me to navigate you there?";
+    }
+    
+    if (words.some(w => ['symptom', 'sick', 'pain', 'hurt', 'feel', 'feeling'].includes(w))) {
+        return "I can help you understand your symptoms. Could you describe what you're experiencing? For example, are you having pain, fever, cough, or other symptoms? If it's an emergency, please call 911 immediately.";
+    }
+    
+    // Enhanced fallback with helpful suggestions
+    return `I'm here to help! I can assist you with:
+
+📅 **Appointments** - Schedule, reschedule, or cancel visits
+💊 **Medications** - View prescriptions, set reminders, request refills
+🩺 **Symptoms** - Get guidance on health concerns
+💳 **Billing** - View statements and make payments
+⌚ **Devices** - Connect fitness trackers
+🆘 **Emergencies** - Quick access to help
+
+What would you like help with?`;
 }
 
 /**

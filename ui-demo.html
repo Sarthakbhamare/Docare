@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Demo - DoCare Health</title>
+    <link rel="stylesheet" href="assets/css/core.css">
+    <link rel="stylesheet" href="assets/css/components/forms.css">
+    <link rel="stylesheet" href="assets/css/components/ui-enhancements.css">
+    <style>
+        body {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .demo-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+        }
+        .demo-section h2 {
+            margin-top: 0;
+            color: var(--color-brand-primary);
+            border-bottom: 3px solid var(--color-brand-primary);
+            padding-bottom: 0.5rem;
+        }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .color-box {
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>🎨 UI Enhancement Demo</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-icon">🌓</span> Toggle High Contrast
+        </button>
+    </div>
+
+    <!-- Buttons Section -->
+    <div class="demo-section">
+        <h2>✨ Enhanced Buttons</h2>
+        <p>Hover over buttons to see animations!</p>
+        <div class="demo-grid">
+            <button class="button-primary">Primary Button</button>
+            <button class="button-secondary">Secondary Button</button>
+            <button class="button-ghost">Ghost Button</button>
+            <button class="button-primary" disabled>Disabled Button</button>
+        </div>
+    </div>
+
+    <!-- Forms Section -->
+    <div class="demo-section">
+        <h2>📝 Enhanced Forms</h2>
+        <p>Click inputs to see focus effects!</p>
+        <div style="display: grid; gap: 1rem;">
+            <label class="label">
+                <span>Text Input</span>
+                <input type="text" class="input" placeholder="Enter text here...">
+            </label>
+            <label class="label">
+                <span>Select Dropdown</span>
+                <select class="select">
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </label>
+            <label class="label">
+                <span>Textarea</span>
+                <textarea class="textarea" rows="3" placeholder="Enter long text..."></textarea>
+            </label>
+        </div>
+    </div>
+
+    <!-- Badges Section -->
+    <div class="demo-section">
+        <h2>🏷️ Badges</h2>
+        <div class="demo-grid">
+            <span class="badge badge--success">✅ Success</span>
+            <span class="badge badge--warning">⚠️ Warning</span>
+            <span class="badge badge--error">❌ Error</span>
+            <span class="badge badge--info">ℹ️ Info</span>
+        </div>
+    </div>
+
+    <!-- Alerts Section -->
+    <div class="demo-section">
+        <h2>🔔 Alerts</h2>
+        <div style="display: grid; gap: 1rem;">
+            <div class="alert alert--success">
+                <strong>Success!</strong> Your changes have been saved.
+            </div>
+            <div class="alert alert--warning">
+                <strong>Warning!</strong> Please check your internet connection.
+            </div>
+            <div class="alert alert--error">
+                <strong>Error!</strong> Something went wrong. Please try again.
+            </div>
+            <div class="alert alert--info">
+                <strong>Info!</strong> New features are now available.
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bars Section -->
+    <div class="demo-section">
+        <h2>📊 Progress Bars</h2>
+        <div style="display: grid; gap: 1.5rem;">
+            <div>
+                <p>25% Complete</p>
+                <div class="progress-bar">
+                    <div class="progress-bar__fill" style="width: 25%"></div>
+                </div>
+            </div>
+            <div>
+                <p>60% Complete</p>
+                <div class="progress-bar">
+                    <div class="progress-bar__fill" style="width: 60%"></div>
+                </div>
+            </div>
+            <div>
+                <p>90% Complete</p>
+                <div class="progress-bar">
+                    <div class="progress-bar__fill" style="width: 90%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icon Buttons Section -->
+    <div class="demo-section">
+        <h2>🎯 Icon Buttons</h2>
+        <p>Hover to see rotation effect!</p>
+        <div class="demo-grid">
+            <button class="icon-button">🔍</button>
+            <button class="icon-button">⚙️</button>
+            <button class="icon-button">❤️</button>
+            <button class="icon-button">🔔</button>
+            <button class="icon-button">📥</button>
+            <button class="icon-button">🗑️</button>
+        </div>
+    </div>
+
+    <!-- Chips Section -->
+    <div class="demo-section">
+        <h2>🏷️ Chips</h2>
+        <p>Hover to see transformation!</p>
+        <div class="demo-grid">
+            <span class="chip">🏥 Healthcare</span>
+            <span class="chip">💊 Medicine</span>
+            <span class="chip">🩺 Diagnosis</span>
+            <span class="chip">📅 Appointment</span>
+        </div>
+    </div>
+
+    <!-- Skeleton Loaders Section -->
+    <div class="demo-section">
+        <h2>⏳ Skeleton Loaders</h2>
+        <div style="display: grid; gap: 1rem;">
+            <div class="skeleton skeleton--heading"></div>
+            <div class="skeleton skeleton--text"></div>
+            <div class="skeleton skeleton--text"></div>
+            <div class="skeleton skeleton--text" style="width: 60%"></div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <div class="skeleton skeleton--circle"></div>
+                <div style="flex: 1;">
+                    <div class="skeleton skeleton--text"></div>
+                    <div class="skeleton skeleton--text" style="width: 80%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Section -->
+    <div class="demo-section">
+        <h2>🃏 Cards</h2>
+        <p>Hover to see lift effect!</p>
+        <div class="demo-grid">
+            <div class="card">
+                <h3>Card Title</h3>
+                <p>This is a card with hover effect. Watch it lift when you hover!</p>
+            </div>
+            <div class="card">
+                <h3>Another Card</h3>
+                <p>Cards now have borders and smooth animations.</p>
+            </div>
+            <div class="card">
+                <h3>Third Card</h3>
+                <p>High contrast mode makes these pop with cyan borders!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltips Section -->
+    <div class="demo-section">
+        <h2>💬 Tooltips</h2>
+        <p>Hover over buttons below to see tooltips!</p>
+        <div class="demo-grid">
+            <button class="button-primary" data-tooltip="Save your work">Save</button>
+            <button class="button-secondary" data-tooltip="Delete this item">Delete</button>
+            <button class="button-ghost" data-tooltip="Download file">Download</button>
+        </div>
+    </div>
+
+    <!-- Color Palette Section -->
+    <div class="demo-section">
+        <h2>🎨 Color Palette</h2>
+        <div class="demo-grid">
+            <div class="color-box" style="background: var(--color-brand-primary)">Primary</div>
+            <div class="color-box" style="background: var(--color-brand-secondary)">Secondary</div>
+            <div class="color-box" style="background: var(--color-success)">Success</div>
+            <div class="color-box" style="background: var(--color-warning); color: #000;">Warning</div>
+            <div class="color-box" style="background: var(--color-error)">Error</div>
+            <div class="color-box" style="background: var(--color-info)">Info</div>
+        </div>
+    </div>
+
+    <!-- Empty State Section -->
+    <div class="demo-section">
+        <h2>📭 Empty State</h2>
+        <div class="empty-state">
+            <div class="empty-state__icon">📭</div>
+            <h3 class="empty-state__title">No Items Found</h3>
+            <p class="empty-state__description">
+                You don't have any items yet. Click the button below to get started!
+            </p>
+            <button class="button-primary">Get Started</button>
+        </div>
+    </div>
+
+    <!-- Animation Demo Section -->
+    <div class="demo-section">
+        <h2>✨ Animations</h2>
+        <p>This page uses fadeIn animations on load. Refresh to see again!</p>
+        <button class="button-primary" onclick="location.reload()">Refresh Page</button>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        window.toggleTheme = function() {
+            const isHighContrast = document.documentElement.getAttribute('data-theme') === 'high-contrast';
+            if (isHighContrast) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.removeItem('docare.theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'high-contrast');
+                localStorage.setItem('docare.theme', 'high-contrast');
+            }
+            
+            // Update icon
+            const icon = document.querySelector('.theme-icon');
+            icon.textContent = isHighContrast ? '🌓' : '☀️';
+        };
+
+        // Load saved theme
+        if (localStorage.getItem('docare.theme') === 'high-contrast') {
+            document.documentElement.setAttribute('data-theme', 'high-contrast');
+            document.querySelector('.theme-icon').textContent = '☀️';
+        }
+    </script>
+</body>
+</html>

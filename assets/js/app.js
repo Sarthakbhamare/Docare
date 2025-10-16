@@ -8,6 +8,7 @@ import { i18n } from './i18n.js';
 import { showToast } from './toast.js';
 import { initFloatingChatButton } from './components/chatbot-modal.js';
 import { initFileUploadTriggers } from './components/file-upload-modal.js';
+import BackendAPI from './api-integration.js';
 
 import { LandingPage } from './pages/home.js';
 import { LoginPage } from './pages/login.js';
@@ -23,6 +24,9 @@ import { HealthJournalPage } from './pages/health-journal.js';
 import { VideoCallPage } from './pages/video-call.js';
 import { ProfilePage } from './pages/profile.js';
 import { LibraryPage } from './pages/library.js';
+import { AIHealthCoachPage } from './pages/ai-health-coach.js';
+import { NutritionTrackerPage } from './pages/nutrition-tracker.js';
+import { MentalHealthScreeningPage } from './pages/mental-health-screening.js';
 import { NotFoundPage } from './pages/not-found.js';
 
 const appRoot = document.querySelector('[data-app-root]');
@@ -45,15 +49,35 @@ applyStoredTheme();
 
 auth.init();
 
+// Make BackendAPI globally accessible
+window.__backendAPI = BackendAPI;
+
+const navigationIcons = {
+    '/dashboard': '🏠',
+    '/appointments': '📅',
+    '/symptom-checker': '🔍',
+    '/messages': '💬',
+    '/medications': '💊',
+    '/billing': '💳',
+    '/devices': '⌚',
+    '/ai-health-coach': '🤖',
+    '/nutrition-tracker': '🥗',
+    '/mental-health-screening': '🧠',
+    '/profile': '👤'
+};
+
 const privateNavItems = [
-    { labelKey: 'nav.dashboard', route: '/dashboard' },
-    { labelKey: 'nav.appointments', route: '/appointments' },
-    { labelKey: 'nav.symptomChecker', route: '/symptom-checker' },
-    { labelKey: 'nav.messages', route: '/messages' },
-    { labelKey: 'nav.medications', route: '/medications' },
-    { labelKey: 'nav.billing', route: '/billing' },
-    { labelKey: 'nav.devices', route: '/devices' },
-    { labelKey: 'nav.profile', route: '/profile' },
+    { labelKey: 'nav.dashboard', route: '/dashboard', icon: '🏠' },
+    { labelKey: 'nav.appointments', route: '/appointments', icon: '📅' },
+    { labelKey: 'nav.symptomChecker', route: '/symptom-checker', icon: '🔍' },
+    { labelKey: 'nav.messages', route: '/messages', icon: '💬' },
+    { labelKey: 'nav.medications', route: '/medications', icon: '💊' },
+    { labelKey: 'nav.billing', route: '/billing', icon: '💳' },
+    { labelKey: 'nav.devices', route: '/devices', icon: '⌚' },
+    { labelKey: 'nav.aiHealthCoach', route: '/ai-health-coach', icon: '🤖' },
+    { labelKey: 'nav.nutritionTracker', route: '/nutrition-tracker', icon: '🥗' },
+    { labelKey: 'nav.mentalHealthScreening', route: '/mental-health-screening', icon: '🧠' },
+    { labelKey: 'nav.profile', route: '/profile', icon: '👤' },
 ];
 
 const routes = {
@@ -69,6 +93,9 @@ const routes = {
     '/devices': DevicesPage,
     '/health-journal': HealthJournalPage,
     '/video-call': VideoCallPage,
+    '/ai-health-coach': AIHealthCoachPage,
+    '/nutrition-tracker': NutritionTrackerPage,
+    '/mental-health-screening': MentalHealthScreeningPage,
     '/profile': ProfilePage,
     '/library': LibraryPage,
 };
@@ -195,7 +222,7 @@ const renderSidebar = currentPath => `
             <h2 class="app-sidebar__title">${i18n.t('brand.tagline')}</h2>
             <nav class="sidebar-nav">
                 ${privateNavItems.map(item => `
-                    <a class="sidebar-nav__link" data-route="${item.route}" href="${item.route}" aria-current="${currentPath === item.route ? 'page' : 'false'}">
+                    <a class="sidebar-nav__link" data-route="${item.route}" href="${item.route}" aria-current="${currentPath === item.route ? 'page' : 'false'}" data-icon="${item.icon}">
                         ${i18n.t(item.labelKey)}
                     </a>
                 `).join('')}
